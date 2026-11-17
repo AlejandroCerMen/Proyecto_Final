@@ -1,0 +1,578 @@
+/* ==========================================================================
+   ESTILOS GENERALES DEL PROYECTO: TU NEVERA SOSTENIBLE
+   Asignatura: Programación Web y Sistemas Inmersivos (UPV)
+   Temática: ODS 2 (Hambre Cero) y ODS 12 (Consumo Responsable)
+   Gama de colores: Tonos azules institucionales y limpios
+   ========================================================================== */
+
+/* Reseteo básico y modelo de caja */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f4f8;
+    color: #2b3a4a;
+}
+
+/* --------------------------------------------------------------------------
+   ENCABEZADO (HEADER)
+   -------------------------------------------------------------------------- */
+header {
+    background-color: #1e3a5f;
+    color: #ffffff;
+    padding: 25px 20px 15px 20px;
+    text-align: center;
+    border-bottom: 4px solid #0f243e;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    font-size: 1.05rem;
+    color: #d0e1f2;
+}
+
+/* --------------------------------------------------------------------------
+   BARRA DE NAVEGACIÓN (NAV)
+   -------------------------------------------------------------------------- */
+nav {
+    background-color: #12283e;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav li {
+    margin: 0;
+}
+
+nav a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover {
+    background-color: #244b72;
+    color: #ffffff;
+}
+
+nav a.activo {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   CONTENEDOR PRINCIPAL (MAIN)
+   -------------------------------------------------------------------------- */
+main {
+    max-width: 1050px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Bloque de introducción */
+.bloque-intro {
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bloque-intro h2 {
+    color: #1e3a5f;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 6px;
+    display: inline-block;
+}
+
+.bloque-intro p {
+    margin-bottom: 12px;
+}
+
+/* Insignias ODS */
+.badges-ods {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.badge-ods2 {
+    background-color: #1976d2;
+}
+
+.badge-ods12 {
+    background-color: #0288d1;
+}
+
+/* --------------------------------------------------------------------------
+   TARJETAS Y SECCIONES DEL MENÚ (Flexbox)
+   -------------------------------------------------------------------------- */
+.seccion-titulo {
+    color: #1e3a5f;
+    margin: 25px 0 15px 0;
+    font-size: 1.4rem;
+}
+
+.grid-secciones {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-menu {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 280px;
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.tarjeta-menu h3 {
+    color: #1a4a75;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.tarjeta-menu p {
+    color: #435b71;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.tarjeta-menu ul {
+    margin-left: 20px;
+    margin-bottom: 18px;
+    color: #52677b;
+    font-size: 0.9rem;
+}
+
+.tarjeta-menu ul li {
+    margin-bottom: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   BOTONES
+   -------------------------------------------------------------------------- */
+.btn-enlace, button, input[type="submit"], input[type="button"] {
+    display: inline-block;
+    background-color: #1e3a5f;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-enlace:hover, button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+    background-color: #0f243e;
+}
+
+.btn-secundario {
+    background-color: #0284c7;
+}
+
+.btn-secundario:hover {
+    background-color: #0369a1;
+}
+
+.btn-peligro {
+    background-color: #c53030;
+}
+
+.btn-peligro:hover {
+    background-color: #9b2c2c;
+}
+
+.panel-botones {
+    margin: 20px 0;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   FORMULARIOS
+   -------------------------------------------------------------------------- */
+form {
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+fieldset {
+    border: 1px solid #b8cce0;
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+legend {
+    font-weight: bold;
+    color: #1e3a5f;
+    padding: 0 8px;
+}
+
+.grupo-campo {
+    margin-bottom: 15px;
+}
+
+.grupo-campo label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1e3a5f;
+}
+
+.grupo-campo input[type="text"],
+.grupo-campo input[type="date"],
+.grupo-campo input[type="number"],
+.grupo-campo input[type="email"],
+.grupo-campo select,
+.grupo-campo textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b8cce0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #fbfcfe;
+}
+
+.grupo-campo input:focus,
+.grupo-campo select:focus,
+.grupo-campo textarea:focus {
+    outline: none;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+.fila-formulario {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.fila-formulario .grupo-campo {
+    flex: 1 1 200px;
+}
+
+/* --------------------------------------------------------------------------
+   TABLAS (Table Styles)
+   -------------------------------------------------------------------------- */
+.tabla-contenedor {
+    overflow-x: auto;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #e1e9f1;
+    font-size: 0.92rem;
+}
+
+th {
+    background-color: #1e3a5f;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+tr:hover {
+    background-color: #edf4fa;
+}
+
+/* Estilos dinámicos para avisos de caducidad (JS) */
+.fila-urgente {
+    background-color: #fff3cd !important;
+    border-left: 5px solid #ff9800;
+    font-weight: 500;
+}
+
+.fila-muy-urgente {
+    background-color: #ffe5e5 !important;
+    border-left: 5px solid #e53935;
+    font-weight: 600;
+}
+
+.etiqueta-estado {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.estado-optimo {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.estado-pronto {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.estado-caducando {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* --------------------------------------------------------------------------
+   CAJAS DE MENSAJES Y CONSEJOS (Aparición / Desaparición con JS)
+   -------------------------------------------------------------------------- */
+.caja-consejo {
+    background-color: #e0f2fe;
+    border-left: 4px solid #0284c7;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.caja-consejo h4 {
+    color: #0369a1;
+    margin-bottom: 6px;
+}
+
+.caja-exito {
+    background-color: #dcfce7;
+    border-left: 4px solid #16a34a;
+    color: #14532d;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   DRAG & DROP (LA OLLA VIRTUAL)
+   -------------------------------------------------------------------------- */
+.contenedor-juego {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.panel-despensa, .panel-olla {
+    flex: 1 1 350px;
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.panel-despensa h3, .panel-olla h3 {
+    color: #1e3a5f;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #e1e9f1;
+    padding-bottom: 6px;
+}
+
+.lista-ingredientes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-height: 120px;
+    padding: 10px;
+    background-color: #f8fafc;
+    border: 2px dashed #b8cce0;
+    border-radius: 6px;
+}
+
+.ingrediente-item {
+    background-color: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: grab;
+    user-select: none;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.ingrediente-item:hover {
+    background-color: #cbd5e1;
+    transform: scale(1.05);
+}
+
+.ingrediente-item:active {
+    cursor: grabbing;
+}
+
+/* Zona de soltar (Olla) */
+.zona-drop {
+    min-height: 180px;
+    background-color: #eaf2f9;
+    border: 3px dashed #0284c7;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.zona-drop.drag-sobre {
+    background-color: #bae6fd;
+    border-color: #0369a1;
+}
+
+.ingredientes-en-olla {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.caja-receta-resultado {
+    background-color: #ffffff;
+    border: 2px solid #0284c7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+.caja-receta-resultado h3 {
+    color: #1e3a5f;
+    margin-bottom: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   CALCULADORA DE IMPACTO
+   -------------------------------------------------------------------------- */
+.panel-metricas {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.tarjeta-metrica {
+    flex: 1 1 200px;
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-top: 4px solid #0284c7;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.tarjeta-metrica .valor-metrica {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e3a5f;
+    margin: 8px 0;
+}
+
+.tarjeta-metrica .unidad-metrica {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   MULTIMEDIA E IFRAMES
+   -------------------------------------------------------------------------- */
+.contenedor-multimedia {
+    background-color: #ffffff;
+    border: 1px solid #d0dce8;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 25px 0;
+}
+
+.contenedor-multimedia h3 {
+    color: #1e3a5f;
+    margin-bottom: 12px;
+}
+
+.iframe-responsive {
+    width: 100%;
+    height: 350px;
+    border: 1px solid #b8cce0;
+    border-radius: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   PIE DE PÁGINA (FOOTER)
+   -------------------------------------------------------------------------- */
+footer {
+    background-color: #12283e;
+    color: #c9daf0;
+    text-align: center;
+    padding: 22px 15px;
+    margin-top: 45px;
+    border-top: 3px solid #1e3a5f;
+    font-size: 0.9rem;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: underline;
+}

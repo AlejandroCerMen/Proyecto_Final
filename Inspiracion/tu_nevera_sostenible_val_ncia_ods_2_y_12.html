@@ -1,0 +1,2138 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu Nevera Sostenible — València (ODS 2 y ODS 12) | UPV</title>
+  <!-- Tipografía Inter desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            forest: '#1B4332',
+            sage: '#2D6A4F',
+            mint: '#D8F3DC',
+            cream: '#FDFBF7',
+            warmgray: '#F8F9FA',
+            valencia: '#E76F51',
+            amberalert: '#F4A261',
+          },
+          boxShadow: {
+            soft: '0 4px 20px -2px rgba(27, 67, 50, 0.08)',
+            card: '0 10px 25px -5px rgba(27, 67, 50, 0.06), 0 4px 10px -2px rgba(0, 0, 0, 0.03)',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Estilos personalizados mediterráneos y transiciones interactivas */
+    body {
+      background-color: #FDFBF7;
+      color: #1F2937;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Transiciones suaves para cambios de página y DOM */
+    .page-section {
+      display: none;
+      animation: fadeSlideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Estilos específicos de Drag & Drop para La Olla Virtual */
+    .draggable-ingredient {
+      cursor: grab;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      user-select: none;
+    }
+    .draggable-ingredient:active {
+      cursor: grabbing;
+    }
+    .draggable-ingredient.dragging {
+      opacity: 0.45;
+      transform: scale(0.96);
+    }
+
+    .pot-dropzone {
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pot-dropzone.drag-over {
+      transform: scale(1.03);
+      border-color: #E76F51 !important;
+      background-color: #FFF7ED !important;
+      box-shadow: 0 0 0 6px rgba(231, 111, 81, 0.18), 0 20px 35px -10px rgba(231, 111, 81, 0.25);
+    }
+
+    /* Animación de vapor en la olla */
+    @keyframes steamRise {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-8px) scale(1.1); opacity: 0.4; }
+      100% { transform: translateY(-16px) scale(0.95); opacity: 0; }
+    }
+    .steam-1 { animation: steamRise 2.4s infinite ease-in-out; }
+    .steam-2 { animation: steamRise 2.4s infinite ease-in-out 0.8s; }
+    .steam-3 { animation: steamRise 2.4s infinite ease-in-out 1.6s; }
+
+    /* Modo Alerta Caducidad (cambio de estilo dinámico) */
+    .alert-mode-active tr.row-safe {
+      opacity: 0.42;
+      filter: grayscale(40%);
+      transition: all 0.3s ease;
+    }
+    .alert-mode-active tr.row-urgent {
+      background-color: #FFEDD5 !important;
+      box-shadow: inset 6px 0 0 #E76F51, 0 4px 12px rgba(231, 111, 81, 0.18);
+      transform: scale(1.004);
+    }
+
+    /* Sliders personalizados para la calculadora ODS */
+    input[type="range"] {
+      accent-color: #2D6A4F;
+    }
+
+    /* Scrollbar discreta */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FDFBF7;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2D6A4F;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-sage selection:text-white">
+
+  <!-- NOTIFICACIÓN TOAST NO BLOQUEANTE (Sustituye a alert()) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+  <!-- MODAL DE DETALLE DE RECETA -->
+  <div id="recipe-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-stone-200 relative animate-[fadeSlideIn_0.25s_ease]">
+      <button onclick="closeRecipeModal()" aria-label="Cerrar receta" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-stone-100 hover:bg-valencia hover:text-white text-stone-600 flex items-center justify-center transition-colors font-bold">
+        ✕
+      </button>
+      <div id="recipe-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- BARRA DE NAVEGACIÓN SUPERIOR FIJA (4 PÁGINAS DEL PROYECTO UPV)        -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-forest/95 backdrop-blur-md text-white shadow-md border-b border-sage/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-center justify-between py-3 gap-3">
+        <!-- Marca e Identidad UPV -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('page-inicio')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-valencia to-amberalert flex items-center justify-center text-white text-xl shadow-inner font-extrabold">
+            🍊
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-base sm:text-lg tracking-tight leading-none">Tu Nevera Sostenible</span>
+              <span class="hidden md:inline-block text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-sage text-mint border border-mint/30">València</span>
+            </div>
+            <p class="text-[11px] text-emerald-200/90 mt-0.5">Proyecto UPV · PWSI · ODS 2 &amp; ODS 12</p>
+          </div>
+        </div>
+
+        <!-- Navegación entre las 4 páginas simuladas -->
+        <nav aria-label="Navegación principal" class="flex items-center gap-1 sm:gap-2 overflow-x-auto w-full lg:w-auto pb-1 lg:pb-0">
+          <button data-target="page-inicio" onclick="navigateTo('page-inicio')" class="nav-tab active-tab flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all bg-valencia text-white shadow-sm">
+            <span>1. Inicio y Nevera</span>
+            <span id="nav-urgent-badge" class="ml-1 px-1.5 py-0.2 text-[11px] rounded-full bg-white text-valencia font-bold">0</span>
+          </button>
+          <button data-target="page-recetas" onclick="navigateTo('page-recetas')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all text-emerald-100 hover:bg-sage/60">
+            <span>2. Olla Virtual</span>
+          </button>
+          <button data-target="page-impacto" onclick="navigateTo('page-impacto')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all text-emerald-100 hover:bg-sage/60">
+            <span>3. Calculadora ODS</span>
+          </button>
+          <button data-target="page-donacion" onclick="navigateTo('page-donacion')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all text-emerald-100 hover:bg-sage/60">
+            <span>4. Red Solidaria VLC</span>
+          </button>
+        </nav>
+
+        <!-- Botón de reinicio de datos de demostración -->
+        <div class="hidden xl:flex items-center">
+          <button onclick="resetDemoData()" title="Restaurar inventario inicial de València" class="text-xs px-3 py-1.5 rounded-lg bg-sage/50 hover:bg-sage text-emerald-100 border border-emerald-400/20 transition-colors">
+            ↻ Restaurar Demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- =================================================================== -->
+    <!-- PÁGINA 1: INICIO Y MI NEVERA (Responsable: Miembro 1)               -->
+    <!-- =================================================================== -->
+    <section id="page-inicio" class="page-section active space-y-8">
+      <!-- Etiqueta de archivo del proyecto -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 border-b border-stone-200 pb-3">
+        <span class="font-mono bg-stone-100 px-2.5 py-1 rounded-md text-forest font-semibold">📄 Archivo: index.html · Responsable: Miembro 1</span>
+        <span>Sincronización automática vía <code class="text-valencia font-semibold">localStorage</code></span>
+      </div>
+
+      <!-- HERO SECTION + MULTIMEDIA INTERACTIVO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch bg-white rounded-3xl p-6 sm:p-8 shadow-card border border-stone-100">
+        <!-- Columna izquierda: Presentación e Insignias ODS -->
+        <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mint/70 text-forest text-xs font-bold tracking-wide">
+              <span>🌱 INNOVACIÓN URBANA SOSTENIBLE · VALÈNCIA</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-forest tracking-tight leading-tight">
+              Reduce el desperdicio en tu cocina y conecta con <span class="text-valencia">l’Horta de València</span>.
+            </h1>
+            <p class="text-stone-600 text-sm sm:text-base leading-relaxed">
+              En España se desperdician más de <strong>1.200 millones de kilos</strong> de alimentos al año, y el 42% ocurre en los hogares. <em>Tu Nevera Sostenible</em> te ayuda a controlar fechas de caducidad, cocinar recetas de aprovechamiento con lo que ya tienes y canalizar excedentes hacia la red solidaria valenciana.
+            </p>
+          </div>
+
+          <!-- Insignias oficiales ODS 2 y ODS 12 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-[#DDA63A]/10 border border-[#DDA63A]/40">
+              <div class="w-11 h-11 rounded-xl bg-[#DDA63A] text-white font-extrabold flex flex-col items-center justify-center shrink-0 shadow-sm">
+                <span class="text-[10px] leading-none">ODS</span>
+                <span class="text-lg leading-none">2</span>
+              </div>
+              <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-[#9A6B11]">Hambre Cero</h2>
+                <p class="text-xs text-stone-600 mt-0.5">Conexión directa de excedentes domésticos con bancos de alimentos y comedores de València.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-[#BF8B2E]/10 border border-[#BF8B2E]/40">
+              <div class="w-11 h-11 rounded-xl bg-[#BF8B2E] text-white font-extrabold flex flex-col items-center justify-center shrink-0 shadow-sm">
+                <span class="text-[10px] leading-none">ODS</span>
+                <span class="text-lg leading-none">12</span>
+              </div>
+              <div>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-[#875D14]">Consumo Responsable</h2>
+                <p class="text-xs text-stone-600 mt-0.5">Meta 12.3: Reducir a la mitad el desperdicio de alimentos per cápita mediante consumo inteligente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accesos rápidos -->
+          <div class="flex flex-wrap gap-3 pt-1">
+            <button onclick="navigateTo('page-recetas')" class="px-5 py-2.5 rounded-xl bg-forest hover:bg-sage text-white font-semibold text-sm shadow-sm transition-all flex items-center gap-2">
+              <span>🍲 Ir a La Olla Virtual</span>
+              <span>→</span>
+            </button>
+            <button onclick="document.getElementById('food-name').focus()" class="px-5 py-2.5 rounded-xl bg-cream hover:bg-stone-100 text-forest border border-stone-300 font-semibold text-sm transition-all">
+              + Añadir alimento ahora
+            </button>
+          </div>
+        </div>
+
+        <!-- Columna derecha: Reproductor Multimedia Educativo HTML5 Interactivo -->
+        <div class="lg:col-span-5 flex flex-col justify-between bg-forest rounded-2xl p-4 text-white shadow-inner">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-valencia animate-ping"></span>
+              Cápsula Multimedia ODS (HTML5)
+            </span>
+            <span id="video-time-display" class="text-xs font-mono text-emerald-200">00:00 / 00:24</span>
+          </div>
+
+          <!-- Lienzo multimedia animado que actúa como vídeo educativo autocontenido -->
+          <div class="relative rounded-xl overflow-hidden bg-[#102A1E] border border-sage/60 aspect-video flex items-center justify-center">
+            <canvas id="edu-video-canvas" class="w-full h-full block"></canvas>
+            <!-- Subtítulos superpuestos -->
+            <div id="video-subtitles" class="absolute bottom-2 inset-x-3 bg-black/75 backdrop-blur-xs text-white text-[11px] sm:text-xs text-center px-3 py-1.5 rounded-lg border border-white/10">
+              Pulsa Play para ver cómo València combate el desperdicio alimentario.
+            </div>
+          </div>
+
+          <!-- Controles del reproductor multimedia -->
+          <div class="mt-3 space-y-2">
+            <!-- Barra de progreso interactiva -->
+            <input id="video-scrubber" type="range" min="0" max="24" step="0.1" value="0" aria-label="Progreso del vídeo" class="w-full h-1.5 bg-sage rounded-lg cursor-pointer accent-valencia" />
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <button id="video-play-btn" onclick="toggleEduVideo()" class="px-3 py-1.5 rounded-lg bg-valencia hover:bg-orange-600 text-white text-xs font-bold transition-colors flex items-center gap-1">
+                  <span id="video-play-icon">▶</span>
+                  <span id="video-play-label">Reproducir</span>
+                </button>
+                <button onclick="restartEduVideo()" class="px-2.5 py-1.5 rounded-lg bg-sage/60 hover:bg-sage text-white text-xs font-medium transition-colors" title="Reiniciar cápsula">
+                  ↺
+                </button>
+              </div>
+              <!-- Selector de capítulos -->
+              <div class="flex items-center gap-1 text-[11px]">
+                <button onclick="jumpVideoChapter(0)" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors">1. Datos</button>
+                <button onclick="jumpVideoChapter(8)" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors">2. Nevera</button>
+                <button onclick="jumpVideoChapter(16)" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors">3. ODS</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTOR DE MI NEVERA: FORMULARIO + TABLA DINÁMICA -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Formulario para añadir alimentos (4 columnas) -->
+        <div class="lg:col-span-4 bg-white rounded-3xl p-6 shadow-card border border-stone-100">
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-9 h-9 rounded-xl bg-mint text-forest flex items-center justify-center text-lg font-bold">🧊</div>
+            <div>
+              <h2 class="text-lg font-bold text-forest">Añadir a Mi Nevera</h2>
+              <p class="text-xs text-stone-500">Se sincroniza con La Olla Virtual</p>
+            </div>
+          </div>
+
+          <form id="fridge-form" class="space-y-4">
+            <div>
+              <label for="food-name" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Nombre del alimento *</label>
+              <input id="food-name" type="text" required placeholder="Ej. Fresas de l'Horta, Queso fresco..." class="w-full px-3.5 py-2.5 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage focus:bg-white transition-all" />
+            </div>
+
+            <div>
+              <label for="food-category" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Categoría *</label>
+              <select id="food-category" class="w-full px-3.5 py-2.5 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage focus:bg-white transition-all">
+                <option value="Frutas y Verduras">🥬 Frutas y Verduras</option>
+                <option value="Lácteos">🥛 Lácteos</option>
+                <option value="Panadería">🥖 Panadería</option>
+                <option value="Carnes y Pescados">🐟 Carnes y Pescados</option>
+                <option value="Otros">🫙 Otros</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="food-qty" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Cantidad *</label>
+                <input id="food-qty" type="text" required placeholder="Ej. 500 g / 3 uds" class="w-full px-3.5 py-2.5 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage focus:bg-white transition-all" />
+              </div>
+              <div>
+                <label for="food-days" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Días caducidad *</label>
+                <input id="food-days" type="number" min="0" max="365" value="2" required class="w-full px-3.5 py-2.5 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage focus:bg-white transition-all" />
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-valencia hover:bg-orange-600 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+              <span>+ Guardar en mi inventario</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Tabla dinámica de inventario + Interactividad JS obligatoria (8 columnas) -->
+        <div class="lg:col-span-8 bg-white rounded-3xl p-6 shadow-card border border-stone-100 space-y-5">
+          <!-- Cabecera de tabla y botón Modo Alerta Caducidad -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-xl font-bold text-forest">Inventario Actual en Casa</h2>
+              <p class="text-xs text-stone-500">Los alimentos con <strong class="text-valencia">≤ 2 días</strong> cambian de estilo automáticamente.</p>
+            </div>
+
+            <!-- Botón de cambio de estilo dinámico: Modo Alerta Caducidad -->
+            <button id="toggle-alert-mode-btn" onclick="toggleAlertMode()" class="px-4 py-2 rounded-xl border-2 border-amberalert bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-xs">
+              <span id="alert-mode-dot" class="w-2.5 h-2.5 rounded-full bg-valencia"></span>
+              <span id="alert-mode-text">Modo Alerta Caducidad: OFF</span>
+            </button>
+          </div>
+
+          <!-- BANNER DINÁMICO DE APARICIÓN Y DESAPARICIÓN -->
+          <div id="urgent-inventory-banner" class="hidden rounded-2xl p-4 bg-gradient-to-r from-orange-50 to-amber-50 border-l-4 border-valencia flex flex-wrap items-center justify-between gap-3 transition-all">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">⚠️</span>
+              <div>
+                <p id="urgent-banner-title" class="text-sm font-bold text-orange-950">¡Atención! Tienes alimentos a punto de caducar</p>
+                <p class="text-xs text-orange-800">Arrástralos a <strong>La Olla Virtual</strong> para aprovecharlos hoy mismo.</p>
+              </div>
+            </div>
+            <button onclick="sendUrgentToPot()" class="px-3.5 py-2 rounded-xl bg-valencia hover:bg-orange-600 text-white text-xs font-bold shadow-xs transition-colors">
+              Cocinar los urgentes →
+            </button>
+          </div>
+
+          <!-- FILTROS RÁPIDOS (Aparición y desaparición de filas) -->
+          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filtros de inventario">
+            <button onclick="filterFridge('ALL')" data-filter="ALL" class="fridge-filter-btn active-filter px-3 py-1.5 rounded-xl text-xs font-semibold bg-forest text-white transition-all">
+              Todos (<span id="count-all">0</span>)
+            </button>
+            <button onclick="filterFridge('URGENT')" data-filter="URGENT" class="fridge-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-orange-50 text-valencia border border-orange-200 hover:bg-orange-100 transition-all">
+              🔥 Caducan pronto ≤2d (<span id="count-urgent">0</span>)
+            </button>
+            <button onclick="filterFridge('Frutas y Verduras')" data-filter="Frutas y Verduras" class="fridge-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">
+              🥬 Frutas y Verduras
+            </button>
+            <button onclick="filterFridge('Lácteos')" data-filter="Lácteos" class="fridge-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">
+              🥛 Lácteos
+            </button>
+            <button onclick="filterFridge('Panadería')" data-filter="Panadería" class="fridge-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 transition-all">
+              🥖 Panadería
+            </button>
+          </div>
+
+          <!-- Tabla Responsive -->
+          <div class="overflow-x-auto rounded-2xl border border-stone-200">
+            <table id="fridge-table" class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-warmgray text-stone-500 text-[11px] uppercase tracking-wider border-b border-stone-200">
+                  <th class="py-3 px-4 font-bold">Alimento</th>
+                  <th class="py-3 px-4 font-bold">Categoría</th>
+                  <th class="py-3 px-4 font-bold">Cantidad</th>
+                  <th class="py-3 px-4 font-bold">Caducidad</th>
+                  <th class="py-3 px-4 font-bold">Estado</th>
+                  <th class="py-3 px-4 font-bold text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="fridge-tbody" class="divide-y divide-stone-100 text-sm">
+                <!-- Filas generadas dinámicamente por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PÁGINA 2: LA OLLA VIRTUAL / RECETAS (Responsable: Miembro 2)        -->
+    <!-- =================================================================== -->
+    <section id="page-recetas" class="page-section space-y-8">
+      <!-- Etiqueta de archivo del proyecto -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 border-b border-stone-200 pb-3">
+        <span class="font-mono bg-stone-100 px-2.5 py-1 rounded-md text-forest font-semibold">📄 Archivo: pages/recetas.html · Responsable: Miembro 2</span>
+        <span>Interactividad: <strong>Drag &amp; Drop HTML5</strong> + <strong>Reordenación física del DOM</strong></span>
+      </div>
+
+      <!-- Cabecera explicativa -->
+      <div class="bg-white rounded-3xl p-6 shadow-card border border-stone-100 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-forest">La Olla Virtual de Aprovechamiento</h1>
+          <p class="text-sm text-stone-600 mt-1">
+            Arrastra tus ingredientes desde la despensa hacia la olla (o pulsa <kbd class="px-1.5 py-0.5 bg-stone-100 border rounded text-xs font-bold">+</kbd>) para descubrir recetas mediterráneas y evitar tirar comida.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="loadUrgentIngredientsIntoPot()" class="px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 text-xs font-bold transition-colors">
+            ⚡ Añadir los que caducan pronto
+          </button>
+          <button onclick="clearPot()" class="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition-colors">
+            Vaciar Olla
+          </button>
+        </div>
+      </div>
+
+      <!-- ZONA INTERACTIVA: IZQUIERDA (NEVERA) + CENTRO (OLLA VIRTUAL DROPZONE) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Panel izquierdo: Ingredientes en tu Nevera (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-6 shadow-card border border-stone-100 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold text-forest flex items-center gap-2">
+                <span>🧺 Ingredientes en tu Nevera</span>
+              </h2>
+              <span class="text-xs text-stone-500 bg-stone-100 px-2.5 py-1 rounded-full font-medium">Arrastrables</span>
+            </div>
+            <div id="draggable-fridge-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Tarjetas draggable="true" generadas dinámicamente -->
+            </div>
+          </div>
+          <p class="text-[11px] text-stone-400 mt-4 pt-3 border-t border-stone-100">
+            💡 Consejo: Los ingredientes añadidos en la Página 1 aparecen aquí automáticamente.
+          </p>
+        </div>
+
+        <!-- Zona central: La Olla Virtual Dropzone (7 cols) -->
+        <div id="virtual-pot-dropzone" class="pot-dropzone lg:col-span-7 bg-gradient-to-b from-white to-orange-50/50 rounded-3xl p-6 sm:p-8 shadow-card border-2 border-dashed border-sage/60 flex flex-col items-center justify-between text-center relative overflow-hidden">
+          <div class="w-full flex items-center justify-between text-xs text-stone-500 mb-2">
+            <span class="font-semibold text-sage">ZONA DE ARRASTRE Y SUELTA (DROPZONE)</span>
+            <span id="pot-count-badge" class="px-2.5 py-0.5 rounded-full bg-forest text-white font-bold">0 ingredientes dentro</span>
+          </div>
+
+          <!-- Ilustración SVG de Olla Mediterránea con vapor animado -->
+          <div class="my-3 relative flex flex-col items-center">
+            <div id="pot-steam" class="flex gap-3 mb-1 opacity-30 transition-opacity">
+              <span class="steam-1 text-xl">♨️</span>
+              <span class="steam-2 text-2xl">♨️</span>
+              <span class="steam-3 text-xl">♨️</span>
+            </div>
+            <svg class="w-28 h-24 text-forest drop-shadow-md" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Asas -->
+              <rect x="6" y="42" width="16" height="8" rx="4" fill="#E76F51" />
+              <rect x="98" y="42" width="16" height="8" rx="4" fill="#E76F51" />
+              <!-- Cuerpo de la olla -->
+              <path d="M20 38H100V74C100 83.9411 91.9411 92 82 92H38C28.0589 92 20 83.9411 20 74V38Z" fill="#1B4332" />
+              <path d="M20 38H100V46H20V38Z" fill="#2D6A4F" />
+              <!-- Tapa entreabierta -->
+              <rect x="24" y="26" width="72" height="7" rx="3.5" fill="#E76F51" />
+              <circle cx="60" cy="22" r="5" fill="#F4A261" />
+            </svg>
+            <h3 class="text-lg font-extrabold text-forest mt-1">Arrastra tus ingredientes aquí</h3>
+            <p class="text-xs text-stone-500 max-w-md">Suelta los alimentos dentro de la olla para filtrar y ordenar las recetas por porcentaje de aprovechamiento.</p>
+          </div>
+
+          <!-- Chips de ingredientes actualmente dentro de la olla -->
+          <div id="pot-ingredients-container" class="w-full min-h-[76px] bg-white/90 rounded-2xl p-3.5 border border-stone-200 flex flex-wrap items-center justify-center gap-2">
+            <span class="text-xs text-stone-400 italic">La olla está vacía. Arrastra algún ingrediente de la izquierda para empezar...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATÁLOGO DE RECETAS + CAMBIO DE ESTRUCTURA DOM (GRID/LISTA + REORDENACIÓN) -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-card border border-stone-100 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-stone-100 pb-4">
+          <div>
+            <h2 class="text-xl font-bold text-forest">Recetas de Aprovechamiento Recomendadas</h2>
+            <p id="recipes-subtitle" class="text-xs text-stone-500 mt-0.5">Mostrando las 8 recetas disponibles. Añade ingredientes a la olla para calcular compatibilidad.</p>
+          </div>
+
+          <!-- Controles de cambio de estructura de la página (Vista Grid vs Vista Lista) -->
+          <div class="flex items-center gap-2 bg-warmgray p-1.5 rounded-xl border border-stone-200">
+            <button id="btn-view-grid" onclick="setRecipeLayout('grid')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-forest text-white shadow-xs transition-all flex items-center gap-1.5">
+              <span>⊞ Vista Cuadrícula</span>
+            </button>
+            <button id="btn-view-list" onclick="setRecipeLayout('list')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:text-forest transition-all flex items-center gap-1.5">
+              <span>☰ Vista en Lista</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenedor dinámico de tarjetas de recetas (soporta reordenación física DOM) -->
+        <div id="recipes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Tarjetas renderizadas dinámicamente por JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PÁGINA 3: CALCULADORA ODS 2 Y 12 (Responsable: Miembro 3)           -->
+    <!-- =================================================================== -->
+    <section id="page-impacto" class="page-section space-y-8">
+      <!-- Etiqueta de archivo del proyecto -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 border-b border-stone-200 pb-3">
+        <span class="font-mono bg-stone-100 px-2.5 py-1 rounded-md text-forest font-semibold">📄 Archivo: pages/impacto.html · Responsable: Miembro 3</span>
+        <span>Metodología FAO &amp; Ministerio de Agricultura (MAPA)</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Formulario interactivo de ahorro semanal (6 cols) -->
+        <div class="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-8 shadow-card border border-stone-100 space-y-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-valencia">Calculadora de Impacto Semanal</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-forest mt-1">¿Cuánta comida has salvado esta semana?</h1>
+            <p class="text-xs sm:text-sm text-stone-600 mt-1">Ajusta los kilogramos de alimentos aprovechados en tu hogar para medir tu contribución real a los ODS 2 y 12.</p>
+          </div>
+
+          <!-- Botones rápidos de escenario -->
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="applyImpactPreset(1.2, 0.8, 0.5, 0.2)" class="px-3 py-1.5 rounded-xl bg-warmgray hover:bg-mint/60 text-forest border border-stone-200 text-xs font-semibold transition-colors">
+              🎓 Piso Estudiantes (2.7 kg)
+            </button>
+            <button type="button" onclick="applyImpactPreset(2.5, 1.5, 1.2, 0.8)" class="px-3 py-1.5 rounded-xl bg-warmgray hover:bg-mint/60 text-forest border border-stone-200 text-xs font-semibold transition-colors">
+              🏡 Hogar València (6.0 kg)
+            </button>
+            <button type="button" onclick="applyImpactPreset(4.0, 2.2, 1.8, 1.5)" class="px-3 py-1.5 rounded-xl bg-warmgray hover:bg-mint/60 text-forest border border-stone-200 text-xs font-semibold transition-colors">
+              🌟 Semana Cero Desperdicio (9.5 kg)
+            </button>
+          </div>
+
+          <!-- Sliders sincronizados con inputs numéricos -->
+          <form id="impact-form" class="space-y-5">
+            <!-- Frutas y Verduras -->
+            <div class="p-4 rounded-2xl bg-warmgray border border-stone-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="kg-frutas" class="text-sm font-bold text-forest">🥬 Frutas y Verduras (kg)</label>
+                <input id="num-frutas" type="number" min="0" max="20" step="0.1" value="1.5" oninput="syncImpactInput('frutas', this.value)" class="w-20 px-2.5 py-1 rounded-lg border border-stone-300 text-right font-bold text-sm text-forest bg-white" />
+              </div>
+              <input id="kg-frutas" type="range" min="0" max="15" step="0.1" value="1.5" oninput="syncImpactSlider('frutas', this.value)" class="w-full cursor-pointer" />
+            </div>
+
+            <!-- Pan y Cereales -->
+            <div class="p-4 rounded-2xl bg-warmgray border border-stone-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="kg-pan" class="text-sm font-bold text-forest">🥖 Pan y Cereales (kg)</label>
+                <input id="num-pan" type="number" min="0" max="20" step="0.1" value="0.8" oninput="syncImpactInput('pan', this.value)" class="w-20 px-2.5 py-1 rounded-lg border border-stone-300 text-right font-bold text-sm text-forest bg-white" />
+              </div>
+              <input id="kg-pan" type="range" min="0" max="15" step="0.1" value="0.8" oninput="syncImpactSlider('pan', this.value)" class="w-full cursor-pointer" />
+            </div>
+
+            <!-- Lácteos -->
+            <div class="p-4 rounded-2xl bg-warmgray border border-stone-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="kg-lacteos" class="text-sm font-bold text-forest">🥛 Lácteos (kg / L)</label>
+                <input id="num-lacteos" type="number" min="0" max="20" step="0.1" value="0.6" oninput="syncImpactInput('lacteos', this.value)" class="w-20 px-2.5 py-1 rounded-lg border border-stone-300 text-right font-bold text-sm text-forest bg-white" />
+              </div>
+              <input id="kg-lacteos" type="range" min="0" max="15" step="0.1" value="0.6" oninput="syncImpactSlider('lacteos', this.value)" class="w-full cursor-pointer" />
+            </div>
+
+            <!-- Carne y Pescado -->
+            <div class="p-4 rounded-2xl bg-warmgray border border-stone-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="kg-carne" class="text-sm font-bold text-forest">🐟 Carne y Pescado (kg)</label>
+                <input id="num-carne" type="number" min="0" max="20" step="0.1" value="0.4" oninput="syncImpactInput('carne', this.value)" class="w-20 px-2.5 py-1 rounded-lg border border-stone-300 text-right font-bold text-sm text-forest bg-white" />
+              </div>
+              <input id="kg-carne" type="range" min="0" max="15" step="0.1" value="0.4" oninput="syncImpactSlider('carne', this.value)" class="w-full cursor-pointer" />
+            </div>
+
+            <button type="button" onclick="calculateODSImpact(true)" class="w-full py-3.5 rounded-xl bg-forest hover:bg-sage text-white font-bold text-sm shadow-sm transition-all">
+              📊 Calcular Impacto ODS y Generar Consejos
+            </button>
+          </form>
+        </div>
+
+        <!-- Resultados Dinámicos + Tarjeta de Rango + Tabla de Equivalencias (6 cols) -->
+        <div class="lg:col-span-6 space-y-6">
+          <!-- TARJETA DE RANGO CON CAMBIO DE ESTILO DINÁMICO -->
+          <div id="ods-rank-card" class="rounded-3xl p-6 sm:p-8 shadow-card border-2 transition-all duration-500 bg-mint/40 border-sage text-forest">
+            <div class="flex items-center justify-between gap-4 mb-4">
+              <div>
+                <span id="ods-rank-eyebrow" class="text-xs font-extrabold uppercase tracking-wider opacity-80">TU NIVEL DE SOSTENIBILIDAD</span>
+                <h2 id="ods-rank-title" class="text-2xl font-extrabold mt-0.5">Nivel 2: Héroe Huertano</h2>
+              </div>
+              <div id="ods-rank-icon" class="w-14 h-14 rounded-2xl bg-white/80 flex items-center justify-center text-3xl shadow-xs">
+                🌿
+              </div>
+            </div>
+
+            <!-- Barra de progreso animada -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-bold">
+                <span>Total salvado: <span id="impact-total-kg">3.3</span> kg / semana</span>
+                <span id="impact-progress-pct">33%</span>
+              </div>
+              <div class="w-full h-3.5 bg-black/10 rounded-full overflow-hidden p-0.5">
+                <div id="impact-progress-bar" class="h-full rounded-full transition-all duration-500 bg-sage" style="width: 33%;"></div>
+              </div>
+            </div>
+
+            <!-- 3 KPIs de impacto ambiental y económico -->
+            <div class="grid grid-cols-3 gap-3 mt-6">
+              <div class="bg-white/90 text-forest rounded-2xl p-3.5 text-center shadow-xs">
+                <span class="text-xl block">💧</span>
+                <span id="res-water" class="text-lg sm:text-xl font-extrabold block mt-1">4.842 L</span>
+                <span class="text-[11px] text-stone-500 font-medium">Agua ahorrada</span>
+              </div>
+              <div class="bg-white/90 text-forest rounded-2xl p-3.5 text-center shadow-xs">
+                <span class="text-xl block">☁️</span>
+                <span id="res-co2" class="text-lg sm:text-xl font-extrabold block mt-1">10.1 kg</span>
+                <span class="text-[11px] text-stone-500 font-medium">CO₂ evitado</span>
+              </div>
+              <div class="bg-white/90 text-forest rounded-2xl p-3.5 text-center shadow-xs">
+                <span class="text-xl block">💶</span>
+                <span id="res-money" class="text-lg sm:text-xl font-extrabold block mt-1">13,46 €</span>
+                <span class="text-[11px] text-stone-500 font-medium">Ahorro semanal</span>
+              </div>
+            </div>
+
+            <p id="res-equivalence-text" class="text-xs mt-4 font-medium opacity-90 text-center">
+              Equivale a ahorrar <strong>96 duchas</strong> de 5 minutos y evitar <strong>84 km</strong> en coche por València.
+            </p>
+          </div>
+
+          <!-- Tabla de Equivalencias Ambientales FAO -->
+          <div class="bg-white rounded-3xl p-6 shadow-card border border-stone-100">
+            <h3 class="text-base font-bold text-forest mb-3">Tabla de Factores Ambientales por Kilogramo (FAO)</h3>
+            <div class="overflow-x-auto rounded-2xl border border-stone-200">
+              <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="bg-warmgray text-stone-500 text-[11px] uppercase border-b border-stone-200">
+                    <th class="py-2.5 px-3 font-bold">Categoría</th>
+                    <th class="py-2.5 px-3 font-bold">Agua / kg</th>
+                    <th class="py-2.5 px-3 font-bold">CO₂ / kg</th>
+                    <th class="py-2.5 px-3 font-bold">Coste / kg</th>
+                    <th class="py-2.5 px-3 font-bold text-right">Tu Ahorro</th>
+                  </tr>
+                </thead>
+                <tbody id="equivalences-tbody" class="divide-y divide-stone-100">
+                  <!-- Actualizado dinámicamente por JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN OCULTA QUE APARECE DINÁMICAMENTE (Aparición y desaparición) -->
+      <div id="conservation-tips-box" class="bg-white rounded-3xl p-6 sm:p-8 shadow-card border-2 border-sage/30 transition-all">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-valencia/15 text-valencia flex items-center justify-center text-2xl">💡</div>
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-valencia">Guía Personalizada · Aparición Dinámica</span>
+              <h3 id="tips-category-title" class="text-xl font-extrabold text-forest">Consejos de Conservación: Frutas y Verduras</h3>
+            </div>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-full bg-mint text-forest font-semibold">Categoría con mayor ahorro registrado</span>
+        </div>
+        <div id="conservation-tips-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Consejos específicos insertados por JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- PÁGINA 4: RED SOLIDARIA VALÈNCIA (Responsable: Miembro 4)           -->
+    <!-- =================================================================== -->
+    <section id="page-donacion" class="page-section space-y-8">
+      <!-- Etiqueta de archivo del proyecto -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 border-b border-stone-200 pb-3">
+        <span class="font-mono bg-stone-100 px-2.5 py-1 rounded-md text-forest font-semibold">📄 Archivo: pages/donacion.html · Responsable: Miembro 4</span>
+        <span>Interactividad: <strong>Reordenación DOM</strong> + <strong>Panel lateral Hover/Click</strong> + <strong>Iframe OpenStreetMap</strong></span>
+      </div>
+
+      <!-- Cabecera y selector de reordenación estructural -->
+      <div class="bg-white rounded-3xl p-6 shadow-card border border-stone-100 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-valencia">ODS 2 · Hambre Cero en València</span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-forest mt-0.5">Red Solidaria de Entrega de Alimentos</h1>
+          <p class="text-xs sm:text-sm text-stone-600 mt-1">Pasa el ratón o haz clic sobre cualquier centro para desplegar las líneas de EMT/Metrovalencia y requisitos de entrega.</p>
+        </div>
+
+        <!-- Selector que reordena físicamente tarjetas y filas de tabla en el DOM -->
+        <div class="flex items-center gap-2 bg-warmgray p-2 rounded-2xl border border-stone-200">
+          <label for="sort-centers-select" class="text-xs font-bold text-forest pl-2">Ordenar puntos:</label>
+          <select id="sort-centers-select" onchange="reorderSolidarityCenters(this.value)" class="px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs font-semibold text-forest focus:outline-none focus:ring-2 focus:ring-sage">
+            <option value="urgency">🔥 Nivel de Urgencia (Alta → Normal)</option>
+            <option value="distance">🎓 Cercanía Campus UPV (Vera)</option>
+            <option value="name">🔤 Orden Alfabético (A → Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MAPA IFRAME OPENSTREETMAP + PANEL LATERAL DINÁMICO (APARICIÓN/DESAPARICIÓN) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Iframe OpenStreetMap centrado en València (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-4 shadow-card border border-stone-100 flex flex-col">
+          <div class="flex items-center justify-between px-2 pb-3">
+            <span class="text-xs font-bold text-forest flex items-center gap-1.5">
+              📍 Mapa Interactivo de València (OpenStreetMap)
+            </span>
+            <span id="map-focus-label" class="text-[11px] font-medium text-stone-500">Vista general · Centro València (39.4699, -0.3763)</span>
+          </div>
+          <div class="w-full h-[320px] sm:h-[360px] rounded-2xl overflow-hidden border border-stone-200 relative">
+            <iframe
+              id="valencia-osm-iframe"
+              title="Mapa de puntos solidarios en València"
+              class="w-full h-full border-0"
+              loading="lazy"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-0.4150%2C39.4520%2C-0.3250%2C39.4920&amp;layer=mapnik&amp;marker=39.4699%2C-0.3763">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Panel lateral de detalles que aparece dinámicamente al pasar ratón o hacer clic (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col">
+          <!-- Estado placeholder antes de seleccionar/hover -->
+          <div id="center-detail-placeholder" class="h-full bg-warmgray rounded-3xl p-8 border-2 border-dashed border-stone-300 flex flex-col items-center justify-center text-center space-y-3">
+            <span class="text-4xl">🚌</span>
+            <h2 class="text-base font-bold text-forest">Consulta cómo llegar en transporte sostenible</h2>
+            <p class="text-xs text-stone-500 max-w-xs">
+              Pasa el cursor (<code class="text-valencia">mouseover</code>) o haz clic sobre cualquiera de las 4 entidades solidarias de abajo para ver sus líneas de <strong>EMT València</strong>, <strong>Metrovalencia</strong> y requisitos.
+            </p>
+          </div>
+
+          <!-- Panel detallado que aparece dinámicamente -->
+          <div id="center-detail-panel" class="hidden h-full bg-forest text-white rounded-3xl p-6 sm:p-7 shadow-card flex-col justify-between space-y-5 transition-all">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span id="detail-urgency-badge" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-valencia text-white">Urgencia Alta</span>
+                <button onclick="hideCenterDetail()" class="text-xs text-emerald-200 hover:text-white underline">Ocultar panel</button>
+              </div>
+              <h2 id="detail-name" class="text-xl sm:text-2xl font-extrabold leading-tight">Banco de Alimentos de València</h2>
+              <p id="detail-address" class="text-xs text-emerald-200">📍 Distrito Extramurs · Horario: L-V 09:00 - 14:00</p>
+
+              <div class="pt-2 space-y-2.5 text-xs">
+                <div class="p-3 rounded-2xl bg-white/10 border border-white/10">
+                  <span class="font-bold text-amberalert block mb-1">🚌 Transporte Público Sostenible (EMT / Metro):</span>
+                  <p id="detail-transport" class="text-emerald-50 leading-relaxed">EMT Líneas 9, 10, 70, 93 · Metrovalencia L3, L5, L9 (Àngel Guimerà)</p>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-white/10 border border-white/10">
+                  <span class="font-bold text-mint block mb-1">📋 Requisitos de Entrega y Conservación:</span>
+                  <p id="detail-requirements" class="text-emerald-50 leading-relaxed">Alimentos no perecederos con envase íntegro, aceite, conservas y productos infantiles.</p>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="preselectCenterInForm()" class="w-full py-2.5 rounded-xl bg-valencia hover:bg-orange-600 text-white font-bold text-xs shadow-sm transition-colors">
+              Registrar entrega en este punto ↓
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARJETAS REORDENABLES DE CENTROS SOLIDARIOS -->
+      <div>
+        <h2 class="text-lg font-bold text-forest mb-3">Puntos Activos en València (Pasa el ratón o haz clic)</h2>
+        <div id="solidarity-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Tarjetas renderizadas y reordenadas en el DOM por JS -->
+        </div>
+      </div>
+
+      <!-- TABLA COMPARATIVA DE CENTROS + FORMULARIO DE DONACIÓN/VOLUNTARIADO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Tabla sincronizada con el orden seleccionado (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-6 shadow-card border border-stone-100 space-y-4">
+          <h3 class="text-lg font-bold text-forest">Directorio Detallado y Necesidades Actuales</h3>
+          <div class="overflow-x-auto rounded-2xl border border-stone-200">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-warmgray text-stone-500 text-[11px] uppercase border-b border-stone-200">
+                  <th class="py-3 px-3.5 font-bold">Centro / Entidad</th>
+                  <th class="py-3 px-3.5 font-bold">Distrito</th>
+                  <th class="py-3 px-3.5 font-bold">Horario</th>
+                  <th class="py-3 px-3.5 font-bold">Urgencia</th>
+                </tr>
+              </thead>
+              <tbody id="solidarity-tbody" class="divide-y divide-stone-100">
+                <!-- Filas reordenadas dinámicamente por JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Formulario funcional de registro de donación o voluntariado (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-6 shadow-card border border-stone-100 space-y-4">
+          <div>
+            <h3 class="text-lg font-bold text-forest">Registrar Donación o Voluntariado</h3>
+            <p class="text-xs text-stone-500">Coordina tu aportación con las entidades valencianas.</p>
+          </div>
+
+          <form id="donation-form" class="space-y-3.5">
+            <div>
+              <label for="donor-name" class="block text-xs font-semibold text-stone-600 mb-1">Nombre completo *</label>
+              <input id="donor-name" type="text" required placeholder="Ej. Laura Martínez" class="w-full px-3.5 py-2 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="donor-type" class="block text-xs font-semibold text-stone-600 mb-1">Modalidad *</label>
+                <select id="donor-type" class="w-full px-3 py-2 rounded-xl bg-warmgray border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sage">
+                  <option value="Donación de alimentos">📦 Donación alimentos</option>
+                  <option value="Voluntariado recogida">🤝 Voluntariado UPV</option>
+                </select>
+              </div>
+              <div>
+                <label for="donor-center" class="block text-xs font-semibold text-stone-600 mb-1">Centro destino *</label>
+                <select id="donor-center" class="w-full px-3 py-2 rounded-xl bg-warmgray border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sage">
+                  <option value="Banco de Alimentos de València">Banco de Alimentos VLC</option>
+                  <option value="Casa Caridad València">Casa Caridad (Pechina)</option>
+                  <option value="Comedor Social San Juan de Dios">San Juan de Dios (Malvarrosa)</option>
+                  <option value="Nevera Solidaria Benimaclet">Nevera Solidaria Benimaclet</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="donor-notes" class="block text-xs font-semibold text-stone-600 mb-1">Detalle de alimentos o disponibilidad *</label>
+              <textarea id="donor-notes" rows="2" required placeholder="Ej. 3 kg de arroz, conservas de legumbres o disponibilidad viernes tarde..." class="w-full px-3.5 py-2 rounded-xl bg-warmgray border border-stone-200 text-sm focus:outline-none focus:ring-2 focus:ring-sage"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-valencia hover:bg-orange-600 text-white font-bold text-sm shadow-sm transition-all">
+              Confirmar Compromiso Solidario
+            </button>
+          </form>
+
+          <!-- Mensaje de confirmación dinámico (sustituye a alert()) -->
+          <div id="donation-confirmation-box" class="hidden rounded-2xl p-4 bg-mint/60 border border-sage text-forest text-xs space-y-1">
+            <!-- Rellenado dinámicamente al enviar formulario -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- PIE DE PÁGINA INSTITUCIONAL (4 MIEMBROS DEL EQUIPO + ODS 2 Y 12)      -->
+  <!-- ===================================================================== -->
+  <footer class="bg-forest text-emerald-100 border-t border-sage/40 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <div class="md:col-span-5 space-y-2">
+          <div class="flex items-center gap-2 text-white font-bold text-base">
+            <span>🍊 Tu Nevera Sostenible — València</span>
+          </div>
+          <p class="text-xs text-emerald-200/80 leading-relaxed">
+            Proyecto desarrollado para la asignatura <strong>Programación Web y Sistemas Inmersivos</strong> (Universitat Politècnica de València · Curso 2026-2027), alineado con la Agenda 2030: <strong>ODS 2 (Hambre Cero)</strong> y <strong>ODS 12 (Producción y Consumo Responsables)</strong>.
+          </p>
+        </div>
+
+        <!-- Desglose de responsabilidades del equipo de 4 miembros -->
+        <div class="md:col-span-7">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-amberalert mb-2.5">Equipo de Desarrollo y Responsabilidad por Fichero</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+            <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+              <span class="font-bold text-white block">Miembro 1</span>
+              <span class="text-emerald-300 font-mono text-[11px]">index.html</span>
+              <p class="text-[11px] text-emerald-200/80 mt-0.5">Inicio, Multimedia y Mi Nevera</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+              <span class="font-bold text-white block">Miembro 2</span>
+              <span class="text-emerald-300 font-mono text-[11px]">pages/recetas.html</span>
+              <p class="text-[11px] text-emerald-200/80 mt-0.5">La Olla Virtual (Drag &amp; Drop)</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+              <span class="font-bold text-white block">Miembro 3</span>
+              <span class="text-emerald-300 font-mono text-[11px]">pages/impacto.html</span>
+              <p class="text-[11px] text-emerald-200/80 mt-0.5">Calculadora ODS 2 y 12</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+              <span class="font-bold text-white block">Miembro 4</span>
+              <span class="text-emerald-300 font-mono text-[11px]">pages/donacion.html</span>
+              <p class="text-[11px] text-emerald-200/80 mt-0.5">Red Solidaria València</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-emerald-300/70">
+        <span>© 2026 Universitat Politècnica de València (UPV) · Escuela Técnica Superior de Ingeniería Informática</span>
+        <span>ODS 2 · Hambre Cero | ODS 12 · Meta 12.3 Reducción del Desperdicio</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- LÓGICA JAVASCRIPT INTEGRADA (DATOS, ESTADO LOCALSTORAGE E INTERACCIÓN)-->
+  <!-- ===================================================================== -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. DATOS BASE Y ESTADO COMPARTIDO (localStorage)
+     * =========================================================================
+     */
+    const STORAGE_KEY = 'nevera_sostenible_valencia_v1';
+
+    // Inventario inicial precargado con productos típicos de València
+    const DEFAULT_INVENTORY = [
+      { id: 'item-1', name: 'Tomates maduros', category: 'Frutas y Verduras', qty: '600 g', daysLeft: 1, icon: '🍅' },
+      { id: 'item-2', name: 'Pan del día anterior', category: 'Panadería', qty: '1 barra', daysLeft: 1, icon: '🥖' },
+      { id: 'item-3', name: 'Naranjas de València', category: 'Frutas y Verduras', qty: '4 uds', daysLeft: 2, icon: '🍊' },
+      { id: 'item-4', name: 'Calabacín', category: 'Frutas y Verduras', qty: '2 uds', daysLeft: 4, icon: '🥒' },
+      { id: 'item-5', name: 'Leche', category: 'Lácteos', qty: '1 L', daysLeft: 3, icon: '🥛' },
+      { id: 'item-6', name: 'Arroz', category: 'Otros', qty: '500 g', daysLeft: 30, icon: '🍚' },
+      { id: 'item-7', name: 'Yogur natural', category: 'Lácteos', qty: '2 uds', daysLeft: 2, icon: '🍶' },
+      { id: 'item-8', name: 'Huevos camperos', category: 'Otros', qty: '6 uds', daysLeft: 6, icon: '🥚' }
+    ];
+
+    // Catálogo de 8 recetas mediterráneas de aprovechamiento
+    const RECIPES_DATA = [
+      {
+        id: 'rec-1',
+        title: 'Salmorejo de aprovechamiento',
+        time: '15 min',
+        savedGrams: 550,
+        difficulty: 'Muy fácil',
+        odsTag: 'Aprovecha pan duro y tomate maduro',
+        ingredients: ['Tomates maduros', 'Pan del día anterior'],
+        extraPantry: ['Aceite de oliva virgen extra', 'Ajo', 'Sal'],
+        steps: '1. Trocea los tomates muy maduros y el pan del día anterior en remojo. 2. Tritura todo junto con un diente de ajo y sal. 3. Emulsiona con aceite de oliva virgen extra hasta lograr una crema sedosa.'
+      },
+      {
+        id: 'rec-2',
+        title: 'Pudin de pan y naranja valenciana',
+        time: '35 min',
+        savedGrams: 650,
+        difficulty: 'Fácil',
+        odsTag: 'Postre tradicional de aprovechamiento',
+        ingredients: ['Pan del día anterior', 'Naranjas de València', 'Leche', 'Huevos camperos'],
+        extraPantry: ['Canela en rama', 'Azúcar o miel'],
+        steps: '1. Infusiona la leche con ralladura y zumo de Naranjas de València y canela. 2. Empapa el pan troceado y mezcla con los huevos batidos. 3. Hornea al baño María 25 minutos a 180°C.'
+      },
+      {
+        id: 'rec-3',
+        title: 'Pisto huertano tradicional',
+        time: '25 min',
+        savedGrams: 500,
+        difficulty: 'Fácil',
+        odsTag: '100% Producto de l’Horta',
+        ingredients: ['Tomates maduros', 'Calabacín'],
+        extraPantry: ['Cebolla', 'Aceite de oliva', 'Pimiento'],
+        steps: '1. Corta el calabacín en dados pequeños y sofríelo suavemente. 2. Añade los tomates maduros triturados y cocina a fuego lento 18 minutos hasta reducir.'
+      },
+      {
+        id: 'rec-4',
+        title: 'Arroz al horno de sobras',
+        time: '40 min',
+        savedGrams: 600,
+        difficulty: 'Media',
+        odsTag: 'Clásico valenciano cero desperdicio',
+        ingredients: ['Arroz', 'Tomates maduros'],
+        extraPantry: ['Caldo de verduras', 'Garbanzos cocidos', 'Ajo'],
+        steps: '1. Sofríe el arroz con tomate maduro rallado. 2. Coloca en cazuela de barro con rodajas de tomate por encima y el doble de caldo caliente. 3. Hornea 20 minutos a 200°C.'
+      },
+      {
+        id: 'rec-5',
+        title: 'Tortilla jugosa de calabacín',
+        time: '20 min',
+        savedGrams: 420,
+        difficulty: 'Fácil',
+        odsTag: 'Cena rápida sostenible',
+        ingredients: ['Calabacín', 'Huevos camperos'],
+        extraPantry: ['Aceite de oliva', 'Pimienta negra'],
+        steps: '1. Pocha el calabacín en láminas finas hasta que esté tierno. 2. Mezcla con los huevos batidos, deja reposar 3 minutos y cuaja en sartén por ambos lados.'
+      },
+      {
+        id: 'rec-6',
+        title: 'Bizcocho de yogur y naranja',
+        time: '35 min',
+        savedGrams: 480,
+        difficulty: 'Fácil',
+        odsTag: 'Salva lácteos y cítricos',
+        ingredients: ['Yogur natural', 'Naranjas de València', 'Huevos camperos'],
+        extraPantry: ['Harina', 'Levadura', 'Aceite suave'],
+        steps: '1. Usa el vasito del yogur como medida para harina y aceite. 2. Añade ralladura y zumo de naranja valenciana, huevos y levadura. 3. Hornea 30 minutos a 180°C.'
+      },
+      {
+        id: 'rec-7',
+        title: 'Crema suave de calabacín y leche',
+        time: '20 min',
+        savedGrams: 450,
+        difficulty: 'Muy fácil',
+        odsTag: 'Ideal para verduras blandas',
+        ingredients: ['Calabacín', 'Leche'],
+        extraPantry: ['Nuez moscada', 'Pimienta', 'Picatostes de pan'],
+        steps: '1. Cuece el calabacín troceado con un chorrito de leche y agua durante 15 minutos. 2. Tritura hasta obtener una textura aterciopelada y sirve con picatostes de pan tostado.'
+      },
+      {
+        id: 'rec-8',
+        title: 'Torrijas cítricas de aprovechamiento',
+        time: '25 min',
+        savedGrams: 520,
+        difficulty: 'Fácil',
+        odsTag: 'Transforma pan duro en manjar',
+        ingredients: ['Pan del día anterior', 'Leche', 'Naranjas de València', 'Huevos camperos'],
+        extraPantry: ['Canela en polvo', 'Aceite suave'],
+        steps: '1. Calienta la leche con piel de naranja valenciana. 2. Empapa rebanadas gruesas de pan duro, pásalas por huevo batido y dóralas en sartén o freidora de aire.'
+      }
+    ];
+
+    // Puntos reales de la Red Solidaria en València
+    const SOLIDARITY_CENTERS = [
+      {
+        id: 'center-1',
+        name: 'Banco de Alimentos de València',
+        shortName: 'Banco de Alimentos VLC',
+        district: 'Extramurs / Punto Urbano',
+        address: 'C/ de la Petxina, 42 · València',
+        schedule: 'Lunes a Viernes · 09:00 - 14:00',
+        urgency: 'Alta',
+        urgencyRank: 1,
+        distanceUpvKm: 4.8,
+        needs: 'Aceite, conservas de pescado, legumbres y leche UHT',
+        transport: 'EMT Líneas 9, 10, 70, 93 · Metrovalencia L3, L5, L9 (Estación Àngel Guimerà)',
+        requirements: 'Alimentos no perecederos en envases cerrados y con fecha de consumo preferente vigente.',
+        lat: 39.4718,
+        lon: -0.3885
+      },
+      {
+        id: 'center-2',
+        name: 'Casa Caridad València',
+        shortName: 'Casa Caridad (Pechina)',
+        district: 'Extramurs / Jardín del Turia',
+        address: 'Paseo de la Pechina, 9 · València',
+        schedule: 'Todos los días · 08:30 - 19:30',
+        urgency: 'Alta',
+        urgencyRank: 1,
+        distanceUpvKm: 4.5,
+        needs: 'Fruta fresca, lácteos, caldos y productos de desayuno',
+        transport: 'EMT Líneas 60, 64, 73, 95 (Parada Petxina - Turia) · Carril bici Jardín del Turia',
+        requirements: 'Acepta producto fresco en buen estado para comedor social previa recepción en portería.',
+        lat: 39.4745,
+        lon: -0.3898
+      },
+      {
+        id: 'center-3',
+        name: 'Comedor Social San Juan de Dios',
+        shortName: 'San Juan de Dios (Malvarrosa)',
+        district: 'Poblats Marítims',
+        address: 'C/ Luz Casanova / Área Malvarrosa · València',
+        schedule: 'Lunes a Sábado · 10:00 - 16:00',
+        urgency: 'Media',
+        urgencyRank: 2,
+        distanceUpvKm: 1.6,
+        needs: 'Arroz, pasta, tomate triturado y verduras de temporada',
+        transport: 'EMT Líneas 19, 31, 32, 92, 98 · Tranvía Metrovalencia L4 y L6 (La Cadena)',
+        requirements: 'Ideal para entregas desde el Campus de Vera (UPV). Horario de recepción matinal.',
+        lat: 39.4795,
+        lon: -0.3295
+      },
+      {
+        id: 'center-4',
+        name: 'Nevera Solidaria Benimaclet',
+        shortName: 'Nevera Solidaria Benimaclet',
+        district: 'Benimaclet',
+        address: 'Entorno Plaza Benimaclet / C/ Guardia Civil · València',
+        schedule: 'Acceso abierto · 09:00 - 21:00',
+        urgency: 'Normal',
+        urgencyRank: 3,
+        distanceUpvKm: 1.2,
+        needs: 'Raciones etiquetadas, fruta, pan del día y yogures',
+        transport: 'EMT Líneas 10, 70, 98 · Metrovalencia L3, L4, L6, L9 (Estación Benimaclet)',
+        requirements: 'Etiquetar con fecha de elaboración/caducidad. Prohibido carne o pescado crudo sin envasar.',
+        lat: 39.4858,
+        lon: -0.3585
+      }
+    ];
+
+    // Factores ambientales FAO / MAPA por kg de alimento salvado
+    const IMPACT_FACTORS = {
+      frutas: { label: 'Frutas y Verduras', water: 820, co2: 1.1, eur: 2.80 },
+      pan: { label: 'Pan y Cereales', water: 1600, co2: 1.4, eur: 3.20 },
+      lacteos: { label: 'Lácteos', water: 1020, co2: 3.2, eur: 3.50 },
+      carne: { label: 'Carne y Pescado', water: 4300, co2: 13.5, eur: 11.50 }
+    };
+
+    // Consejos de conservación para la sección dinámica de Página 3
+    const CONSERVATION_TIPS = {
+      frutas: [
+        { icon: '🥬', title: 'Revive verduras lacias', text: 'Sumerge lechugas, apio o zanahorias en agua muy fría con hielo durante 15 minutos para devolverles su textura crujiente.' },
+        { icon: '🍌', title: 'Separa el etileno', text: 'Guarda tomates, plátanos y manzanas lejos de verduras de hoja verde para evitar que maduren demasiado rápido.' },
+        { icon: '🍊', title: 'Cítricos de València', text: 'Conserva las naranjas en un lugar fresco y ventilado fuera de bolsas de plástico cerradas para evitar humedad.' }
+      ],
+      pan: [
+        { icon: '❄️', title: 'Congela en rebanadas', text: 'Corta la barra de pan antes de congelarla; así podrás tostar directamente solo las rebanadas que necesites cada mañana.' },
+        { icon: '💧', title: 'Refresca pan del día anterior', text: 'Humedece ligeramente la corteza con agua y hornea 5 minutos a 180°C: recuperará su textura recién horneada.' },
+        { icon: '🍞', title: 'Bolsa de tela transpirable', text: 'Evita las bolsas de plástico herméticas que reblandecen la corteza; usa una panera o bolsa de algodón.' }
+      ],
+      lacteos: [
+        { icon: '🌡️', title: 'Zona media del frigorífico', text: 'Guarda leche y yogures en los estantes centrales (4°C), nunca en la puerta donde hay cambios bruscos de temperatura.' },
+        { icon: '📅', title: 'Consumo preferente vs caducidad', text: 'Los yogures tienen fecha de consumo preferente: si están bien refrigerados y sin abrir, siguen siendo seguros días después.' },
+        { icon: '🧀', title: 'Envuelve quesos en papel encerado', text: 'Evita el film plástico directo sobre quesos curados; usa papel de horno para que respiren sin resecarse.' }
+      ],
+      carne: [
+        { icon: '🧊', title: 'Balda inferior más fría', text: 'Coloca carnes y pescados frescos en el estante inferior justo encima del cajón de verduras (0°C a 2°C).' },
+        { icon: '🥡', title: 'Porcionado al llegar de comprar', text: 'Divide las bandejas grandes en raciones individuales antes de congelar para descongelar solo lo necesario.' },
+        { icon: '🍋', title: 'Marinado preventivo', text: 'Si vas a consumir pescado o pollo en 24-48h, marínalo con limón, ajo y aceite de oliva para prolongar su frescura.' }
+      ]
+    };
+
+    // Estado en memoria
+    let inventory = [];
+    let currentFridgeFilter = 'ALL';
+    let alertModeEnabled = false;
+    let potIngredients = ['Tomates maduros', 'Pan del día anterior']; // Precargado con 2 ingredientes para demostración inmediata
+    let recipeOrder = RECIPES_DATA.map(r => r.id);
+    let currentRecipeLayout = 'grid';
+    let selectedCenterId = null;
+
+    /**
+     * =========================================================================
+     * 2. INICIALIZACIÓN Y PERSISTENCIA (localStorage)
+     * =========================================================================
+     */
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          inventory = Array.isArray(parsed.inventory) && parsed.inventory.length > 0
+            ? parsed.inventory
+            : [...DEFAULT_INVENTORY];
+        } else {
+          inventory = [...DEFAULT_INVENTORY];
+          saveState();
+        }
+      } catch (e) {
+        inventory = [...DEFAULT_INVENTORY];
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ inventory }));
+      } catch (e) {
+        console.warn('No se pudo guardar en localStorage:', e);
+      }
+    }
+
+    function resetDemoData() {
+      inventory = [...DEFAULT_INVENTORY];
+      potIngredients = ['Tomates maduros', 'Pan del día anterior'];
+      recipeOrder = RECIPES_DATA.map(r => r.id);
+      currentFridgeFilter = 'ALL';
+      saveState();
+      renderFridgeTable();
+      renderDraggableFridge();
+      renderPot();
+      renderRecipes();
+      showToast('🔄 Datos de demostración de València restaurados.');
+    }
+
+    function getCategoryIcon(category) {
+      const map = {
+        'Frutas y Verduras': '🥬',
+        'Lácteos': '🥛',
+        'Panadería': '🥖',
+        'Carnes y Pescados': '🐟',
+        'Otros': '🫙'
+      };
+      return map[category] || '🥗';
+    }
+
+    /**
+     * =========================================================================
+     * 3. NAVEGACIÓN ENTRE LAS 4 PÁGINAS Y TOASTS
+     * =========================================================================
+     */
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page-section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // Actualizar estilo de pestañas activas
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        if (tab.dataset.target === pageId) {
+          tab.classList.add('bg-valencia', 'text-white', 'font-semibold', 'shadow-sm');
+          tab.classList.remove('text-emerald-100', 'hover:bg-sage/60', 'font-medium');
+        } else {
+          tab.classList.remove('bg-valencia', 'text-white', 'font-semibold', 'shadow-sm');
+          tab.classList.add('text-emerald-100', 'hover:bg-sage/60', 'font-medium');
+        }
+      });
+
+      // Sincronizar vistas al cambiar de página
+      if (pageId === 'page-recetas') {
+        renderDraggableFridge();
+        renderPot();
+        renderRecipes();
+      } else if (pageId === 'page-impacto') {
+        calculateODSImpact(false);
+      } else if (pageId === 'page-donacion') {
+        reorderSolidarityCenters(document.getElementById('sort-centers-select').value);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto bg-forest text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-lg border border-sage flex items-center justify-between gap-3 animate-[fadeSlideIn_0.25s_ease]';
+      toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="text-emerald-300 hover:text-white font-bold">✕</button>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        if (toast.parentElement) toast.remove();
+      }, 3600);
+    }
+
+    /**
+     * =========================================================================
+     * 4. PÁGINA 1: INICIO, MULTIMEDIA INTERACTIVO Y MI NEVERA (Miembro 1)
+     * =========================================================================
+     */
+    // Reproductor multimedia animado HTML5 Canvas
+    let videoPlaying = false;
+    let videoTime = 0;
+    const VIDEO_DURATION = 24;
+    let videoTimerInterval = null;
+
+    const VIDEO_CHAPTERS = [
+      { start: 0, end: 8, title: '1. El reto en València', stat: '77 kg / persona', subtitle: 'Cada valenciano tira una media de 77 kg de comida al año. ¡Podemos cambiarlo!', bg: '#1B4332', accent: '#E76F51' },
+      { start: 8, end: 16, title: '2. Control inteligente', stat: 'Alerta ≤ 2 días', subtitle: 'Registra tu compra y detecta qué alimentos necesitan cocinarse hoy mismo.', bg: '#2D6A4F', accent: '#F4A261' },
+      { start: 16, end: 24, title: '3. ODS 2 y ODS 12', stat: 'Hambre Cero & Sostenibilidad', subtitle: 'Aprovecha en La Olla Virtual o dona excedentes a la Red Solidaria de València.', bg: '#143628', accent: '#52B788' }
+    ];
+
+    function renderEduVideoFrame() {
+      const canvas = document.getElementById('edu-video-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+      const w = rect.width || 400;
+      const h = rect.height || 225;
+
+      const chapter = VIDEO_CHAPTERS.find(c => videoTime >= c.start && videoTime < c.end) || VIDEO_CHAPTERS[0];
+
+      // Fondo degradado
+      ctx.fillStyle = chapter.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // Círculos decorativos animados
+      const pulse = Math.sin(videoTime * 3) * 8;
+      ctx.beginPath();
+      ctx.arc(w * 0.82, h * 0.3, 46 + pulse, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(w * 0.16, h * 0.72, 34 - pulse * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(231, 111, 81, 0.15)';
+      ctx.fill();
+
+      // Etiqueta capítulo
+      ctx.fillStyle = chapter.accent;
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillText(chapter.title.toUpperCase(), 20, 34);
+
+      // Dato principal
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 24px Inter, sans-serif';
+      ctx.fillText(chapter.stat, 20, 68);
+
+      // Barra visual decorativa
+      const barWidth = ((videoTime % 8) / 8) * (w - 40);
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      ctx.fillRect(20, 84, w - 40, 6);
+      ctx.fillStyle = chapter.accent;
+      ctx.fillRect(20, 84, barWidth, 6);
+
+      // Subtítulo e indicadores de tiempo
+      const subEl = document.getElementById('video-subtitles');
+      if (subEl) subEl.textContent = chapter.subtitle;
+
+      const timeEl = document.getElementById('video-time-display');
+      if (timeEl) {
+        const cur = String(Math.floor(videoTime)).padStart(2, '0');
+        timeEl.textContent = `00:${cur} / 00:${VIDEO_DURATION}`;
+      }
+      const scrubber = document.getElementById('video-scrubber');
+      if (scrubber) scrubber.value = videoTime;
+    }
+
+    function toggleEduVideo() {
+      videoPlaying = !videoPlaying;
+      const icon = document.getElementById('video-play-icon');
+      const label = document.getElementById('video-play-label');
+      if (videoPlaying) {
+        icon.textContent = '⏸';
+        label.textContent = 'Pausar';
+        videoTimerInterval = setInterval(() => {
+          videoTime += 0.2;
+          if (videoTime >= VIDEO_DURATION) {
+            videoTime = 0;
+            toggleEduVideo();
+          }
+          renderEduVideoFrame();
+        }, 200);
+      } else {
+        icon.textContent = '▶';
+        label.textContent = 'Reproducir';
+        clearInterval(videoTimerInterval);
+      }
+    }
+
+    function restartEduVideo() {
+      videoTime = 0;
+      renderEduVideoFrame();
+    }
+
+    function jumpVideoChapter(sec) {
+      videoTime = sec;
+      renderEduVideoFrame();
+    }
+
+    // Gestión del formulario de Mi Nevera
+    document.getElementById('fridge-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('food-name');
+      const catInput = document.getElementById('food-category');
+      const qtyInput = document.getElementById('food-qty');
+      const daysInput = document.getElementById('food-days');
+
+      const name = nameInput.value.trim();
+      const category = catInput.value;
+      const qty = qtyInput.value.trim();
+      const daysLeft = parseInt(daysInput.value, 10);
+
+      if (!name || !qty || isNaN(daysLeft)) return;
+
+      const newItem = {
+        id: 'item-' + Date.now(),
+        name,
+        category,
+        qty,
+        daysLeft,
+        icon: getCategoryIcon(category)
+      };
+
+      inventory.unshift(newItem);
+      saveState();
+      renderFridgeTable();
+      renderDraggableFridge();
+
+      nameInput.value = '';
+      qtyInput.value = '';
+      daysInput.value = '3';
+      showToast(`✅ "${name}" añadido a tu nevera y sincronizado.`);
+    });
+
+    // Cambio de estilo dinámico: Modo Alerta Caducidad
+    function toggleAlertMode() {
+      alertModeEnabled = !alertModeEnabled;
+      const table = document.getElementById('fridge-table');
+      const btn = document.getElementById('toggle-alert-mode-btn');
+      const text = document.getElementById('alert-mode-text');
+
+      if (alertModeEnabled) {
+        table.classList.add('alert-mode-active');
+        btn.classList.remove('bg-amber-50', 'text-amber-900');
+        btn.classList.add('bg-valencia', 'text-white', 'border-valencia');
+        text.textContent = 'Modo Alerta Caducidad: ON';
+        showToast('🚨 Modo Alerta activado: resaltando productos con ≤ 2 días.');
+      } else {
+        table.classList.remove('alert-mode-active');
+        btn.classList.add('bg-amber-50', 'text-amber-900');
+        btn.classList.remove('bg-valencia', 'text-white', 'border-valencia');
+        text.textContent = 'Modo Alerta Caducidad: OFF';
+      }
+    }
+
+    // Aparición y desaparición de filas mediante filtros rápidos
+    function filterFridge(filterValue) {
+      currentFridgeFilter = filterValue;
+      document.querySelectorAll('.fridge-filter-btn').forEach(btn => {
+        if (btn.dataset.filter === filterValue) {
+          btn.classList.add('bg-forest', 'text-white');
+          btn.classList.remove('bg-stone-100', 'text-stone-700', 'bg-orange-50', 'text-valencia');
+        } else {
+          btn.classList.remove('bg-forest', 'text-white');
+          if (btn.dataset.filter === 'URGENT') {
+            btn.classList.add('bg-orange-50', 'text-valencia');
+          } else {
+            btn.classList.add('bg-stone-100', 'text-stone-700');
+          }
+        }
+      });
+      renderFridgeTable();
+    }
+
+    function renderFridgeTable() {
+      const tbody = document.getElementById('fridge-tbody');
+      const urgentItems = inventory.filter(item => item.daysLeft <= 2);
+
+      // Actualizar contadores
+      document.getElementById('count-all').textContent = inventory.length;
+      document.getElementById('count-urgent').textContent = urgentItems.length;
+      document.getElementById('nav-urgent-badge').textContent = urgentItems.length;
+
+      // Aparición y desaparición dinámica del banner de alerta
+      const banner = document.getElementById('urgent-inventory-banner');
+      if (urgentItems.length > 0) {
+        banner.classList.remove('hidden');
+        document.getElementById('urgent-banner-title').textContent =
+          `¡Atención! Tienes ${urgentItems.length} alimento${urgentItems.length > 1 ? 's' : ''} a punto de caducar (≤ 2 días)`;
+      } else {
+        banner.classList.add('hidden');
+      }
+
+      // Filtrar elementos según selección
+      const filtered = inventory.filter(item => {
+        if (currentFridgeFilter === 'ALL') return true;
+        if (currentFridgeFilter === 'URGENT') return item.daysLeft <= 2;
+        return item.category === currentFridgeFilter;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-8 text-center text-stone-400 text-sm">
+              No hay alimentos en esta categoría. ¡Prueba otro filtro o añade nuevos productos!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        const isUrgent = item.daysLeft <= 2;
+        // Cambio de estilo dinámico automático para filas <= 2 días
+        const rowStyleClass = isUrgent
+          ? 'row-urgent bg-orange-50/80 border-l-4 border-l-valencia transition-all'
+          : 'row-safe hover:bg-warmgray/70 transition-all';
+
+        const statusBadge = isUrgent
+          ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-valencia text-white shadow-2xs">🔥 CADUCA PRONTO</span>`
+          : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-mint text-forest">✓ Óptimo</span>`;
+
+        const daysLabel = item.daysLeft === 0
+          ? '<span class="font-extrabold text-valencia">¡Hoy!</span>'
+          : `${item.daysLeft} día${item.daysLeft === 1 ? '' : 's'}`;
+
+        return `
+          <tr class="${rowStyleClass}">
+            <td class="py-3.5 px-4 font-semibold text-forest">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl">${item.icon || '🥗'}</span>
+                <span>${item.name}</span>
+              </div>
+            </td>
+            <td class="py-3.5 px-4 text-xs text-stone-600">${item.category}</td>
+            <td class="py-3.5 px-4 text-xs font-medium text-stone-700">${item.qty}</td>
+            <td class="py-3.5 px-4 text-xs font-bold">${daysLabel}</td>
+            <td class="py-3.5 px-4">${statusBadge}</td>
+            <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="cookSingleItem('${item.name.replace(/'/g, "\\'")}')" title="Llevar a La Olla Virtual" class="px-2.5 py-1.5 rounded-lg bg-sage/15 hover:bg-sage text-forest hover:text-white text-xs font-bold transition-colors">
+                🍲 Usar
+              </button>
+              <button onclick="deleteInventoryItem('${item.id}')" title="Eliminar del inventario" class="px-2.5 py-1.5 rounded-lg bg-stone-100 hover:bg-red-500 text-stone-600 hover:text-white text-xs font-bold transition-colors">
+                ✕
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function deleteInventoryItem(id) {
+      inventory = inventory.filter(i => i.id !== id);
+      saveState();
+      renderFridgeTable();
+      renderDraggableFridge();
+      showToast('🗑️ Alimento eliminado del inventario.');
+    }
+
+    function cookSingleItem(name) {
+      if (!potIngredients.includes(name)) {
+        potIngredients.push(name);
+      }
+      navigateTo('page-recetas');
+      showToast(`🍲 "${name}" añadido a La Olla Virtual.`);
+    }
+
+    function sendUrgentToPot() {
+      const urgents = inventory.filter(i => i.daysLeft <= 2).map(i => i.name);
+      urgents.forEach(name => {
+        if (!potIngredients.includes(name)) potIngredients.push(name);
+      });
+      navigateTo('page-recetas');
+      showToast(`⚡ ${urgents.length} ingredientes urgentes añadidos a La Olla Virtual.`);
+    }
+
+    /**
+     * =========================================================================
+     * 5. PÁGINA 2: LA OLLA VIRTUAL (DRAG & DROP + REORDENACIÓN DOM) (Miembro 2)
+     * =========================================================================
+     */
+    function renderDraggableFridge() {
+      const container = document.getElementById('draggable-fridge-list');
+      if (!container) return;
+
+      if (inventory.length === 0) {
+        container.innerHTML = `<p class="text-xs text-stone-400 col-span-2 py-6 text-center">Tu nevera está vacía. Añade ingredientes en la Página 1.</p>`;
+        return;
+      }
+
+      container.innerHTML = inventory.map(item => {
+        const isInPot = potIngredients.includes(item.name);
+        const isUrgent = item.daysLeft <= 2;
+        return `
+          <div
+            draggable="true"
+            data-ingredient="${item.name}"
+            ondragstart="handleDragStart(event)"
+            ondragend="handleDragEnd(event)"
+            class="draggable-ingredient p-3 rounded-2xl border ${isInPot ? 'bg-mint/40 border-sage' : 'bg-warmgray border-stone-200 hover:border-sage'} flex items-center justify-between gap-2 shadow-2xs"
+          >
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-xl shrink-0">${item.icon || '🥗'}</span>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-forest truncate">${item.name}</p>
+                <p class="text-[10px] ${isUrgent ? 'text-valencia font-bold' : 'text-stone-500'}">
+                  ${item.qty} · ${isUrgent ? '🔥 ≤2d' : item.daysLeft + 'd'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onclick="addIngredientToPot('${item.name.replace(/'/g, "\\'")}')"
+              title="Añadir a la olla"
+              class="w-7 h-7 rounded-lg ${isInPot ? 'bg-sage text-white' : 'bg-white hover:bg-valencia hover:text-white text-forest border border-stone-200'} text-xs font-extrabold flex items-center justify-center shrink-0 transition-colors"
+            >
+              ${isInPot ? '✓' : '+'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Eventos HTML5 Drag & Drop
+    function handleDragStart(e) {
+      const name = e.currentTarget.dataset.ingredient;
+      e.dataTransfer.setData('text/plain', name);
+      e.dataTransfer.effectAllowed = 'copy';
+      e.currentTarget.classList.add('dragging');
+    }
+
+    function handleDragEnd(e) {
+      e.currentTarget.classList.remove('dragging');
+    }
+
+    function initPotDropzone() {
+      const dropzone = document.getElementById('virtual-pot-dropzone');
+      if (!dropzone) return;
+
+      dropzone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        dropzone.classList.add('drag-over');
+      });
+
+      dropzone.addEventListener('dragleave', function () {
+        dropzone.classList.remove('drag-over');
+      });
+
+      dropzone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+        const ingredientName = e.dataTransfer.getData('text/plain');
+        if (ingredientName) {
+          addIngredientToPot(ingredientName);
+        }
+      });
+    }
+
+    function addIngredientToPot(name) {
+      if (!potIngredients.includes(name)) {
+        potIngredients.push(name);
+        renderDraggableFridge();
+        renderPot();
+        renderRecipes();
+        showToast(`🍲 "${name}" añadido a La Olla Virtual.`);
+      } else {
+        showToast(`ℹ️ "${name}" ya está dentro de la olla.`);
+      }
+    }
+
+    function removeIngredientFromPot(name) {
+      potIngredients = potIngredients.filter(i => i !== name);
+      renderDraggableFridge();
+      renderPot();
+      renderRecipes();
+    }
+
+    function clearPot() {
+      potIngredients = [];
+      renderDraggableFridge();
+      renderPot();
+      renderRecipes();
+      showToast('🧹 La Olla Virtual se ha vaciado.');
+    }
+
+    function loadUrgentIngredientsIntoPot() {
+      const urgents = inventory.filter(i => i.daysLeft <= 2).map(i => i.name);
+      urgents.forEach(name => {
+        if (!potIngredients.includes(name)) potIngredients.push(name);
+      });
+      renderDraggableFridge();
+      renderPot();
+      renderRecipes();
+      showToast('⚡ Ingredientes próximos a caducar cargados en la olla.');
+    }
+
+    function renderPot() {
+      const container = document.getElementById('pot-ingredients-container');
+      const countBadge = document.getElementById('pot-count-badge');
+      const steam = document.getElementById('pot-steam');
+
+      countBadge.textContent = `${potIngredients.length} ingrediente${potIngredients.length === 1 ? '' : 's'} dentro`;
+
+      if (potIngredients.length === 0) {
+        steam.classList.add('opacity-20');
+        steam.classList.remove('opacity-100');
+        container.innerHTML = `<span class="text-xs text-stone-400 italic">La olla está vacía. Arrastra algún ingrediente de la izquierda para empezar...</span>`;
+        return;
+      }
+
+      steam.classList.remove('opacity-20');
+      steam.classList.add('opacity-100');
+
+      container.innerHTML = potIngredients.map(name => `
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-forest text-white text-xs font-semibold shadow-xs animate-[fadeSlideIn_0.2s_ease]">
+          <span>${name}</span>
+          <button onclick="removeIngredientFromPot('${name.replace(/'/g, "\\'")}')" class="w-4 h-4 rounded-full bg-white/20 hover:bg-valencia flex items-center justify-center text-[10px]">✕</button>
+        </span>
+      `).join('');
+    }
+
+    // Cambio de estructura (Grid vs Lista)
+    function setRecipeLayout(mode) {
+      currentRecipeLayout = mode;
+      const container = document.getElementById('recipes-container');
+      const btnGrid = document.getElementById('btn-view-grid');
+      const btnList = document.getElementById('btn-view-list');
+
+      if (mode === 'grid') {
+        container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5';
+        btnGrid.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-forest text-white shadow-xs transition-all flex items-center gap-1.5';
+        btnList.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:text-forest transition-all flex items-center gap-1.5';
+      } else {
+        container.className = 'flex flex-col gap-4';
+        btnList.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-forest text-white shadow-xs transition-all flex items-center gap-1.5';
+        btnGrid.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:text-forest transition-all flex items-center gap-1.5';
+      }
+      renderRecipes();
+    }
+
+    // Reordenación física de nodos en el DOM (Subir prioridad / Fijar arriba)
+    function moveRecipePriority(recipeId, direction) {
+      const idx = recipeOrder.indexOf(recipeId);
+      if (idx === -1) return;
+
+      if (direction === 'top' && idx > 0) {
+        recipeOrder.splice(idx, 1);
+        recipeOrder.unshift(recipeId);
+      } else if (direction === 'up' && idx > 0) {
+        [recipeOrder[idx - 1], recipeOrder[idx]] = [recipeOrder[idx], recipeOrder[idx - 1]];
+      } else if (direction === 'down' && idx < recipeOrder.length - 1) {
+        [recipeOrder[idx], recipeOrder[idx + 1]] = [recipeOrder[idx + 1], recipeOrder[idx]];
+      }
+      renderRecipes();
+    }
+
+    function renderRecipes() {
+      const container = document.getElementById('recipes-container');
+      const subtitle = document.getElementById('recipes-subtitle');
+      if (!container) return;
+
+      // Calcular compatibilidad con los ingredientes en La Olla Virtual
+      const enriched = recipeOrder.map(id => {
+        const rec = RECIPES_DATA.find(r => r.id === id);
+        const matched = rec.ingredients.filter(ing =>
+          potIngredients.some(potIng => potIng.toLowerCase().includes(ing.toLowerCase()) || ing.toLowerCase().includes(potIng.toLowerCase()))
+        );
+        const pct = Math.round((matched.length / rec.ingredients.length) * 100);
+        return { ...rec, matched, pct };
+      });
+
+      // Si hay ingredientes en la olla, filtramos o priorizamos los compatibles manteniendo orden manual
+      const visibleRecipes = potIngredients.length > 0
+        ? enriched.filter(r => r.matched.length > 0).sort((a, b) => b.pct - a.pct)
+        : enriched;
+
+      if (potIngredients.length > 0) {
+        subtitle.textContent = `Mostrando ${visibleRecipes.length} receta${visibleRecipes.length === 1 ? '' : 's'} compatibles con los ${potIngredients.length} ingredientes de tu olla.`;
+      } else {
+        subtitle.textContent = `Mostrando las ${enriched.length} recetas de aprovechamiento. Arrastra ingredientes a la olla para filtrar.`;
+      }
+
+      if (visibleRecipes.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-10 text-center bg-warmgray rounded-2xl border border-dashed border-stone-300 space-y-2">
+            <p class="text-sm font-bold text-forest">No hay recetas que combinen exactamente esos ingredientes todavía.</p>
+            <p class="text-xs text-stone-500">Prueba añadiendo Tomates maduros, Pan, Naranjas, Calabacín, Leche o Huevos.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const isList = currentRecipeLayout === 'list';
+
+      container.innerHTML = visibleRecipes.map((rec, index) => {
+        const badgeColor = rec.pct === 100
+          ? 'bg-forest text-white'
+          : rec.pct >= 50
+            ? 'bg-sage text-white'
+            : 'bg-stone-200 text-stone-700';
+
+        const ingredientsTags = rec.ingredients.map(ing => {
+          const isMatched = rec.matched.includes(ing);
+          return `<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${isMatched ? 'bg-mint text-forest border border-sage/40' : 'bg-stone-100 text-stone-500'}">${isMatched ? '✓ ' : ''}${ing}</span>`;
+        }).join('');
+
+        return `
+          <article data-recipe-id="${rec.id}" class="rounded-2xl border ${rec.pct === 100 ? 'border-sage bg-mint/15' : 'border-stone-200 bg-warmgray/60'} p-5 flex ${isList ? 'flex-col md:flex-row md:items-center justify-between gap-5' : 'flex-col justify-between gap-4'} shadow-2xs hover:shadow-md transition-all">
+            <div class="space-y-2.5 ${isList ? 'md:max-w-2xl' : ''}">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${badgeColor}">
+                  ${potIngredients.length > 0 ? `${rec.pct}% aprovechamiento` : rec.odsTag}
+                </span>
+                <span class="text-[11px] font-semibold text-stone-500">⏱ ${rec.time} · ♻️ ~${rec.savedGrams}g salvados</span>
+              </div>
+
+              <h3 class="text-base sm:text-lg font-extrabold text-forest leading-snug">${rec.title}</h3>
+
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                ${ingredientsTags}
+              </div>
+            </div>
+
+            <!-- Controles de acción y reordenación física en el DOM -->
+            <div class="flex items-center justify-between gap-2 pt-3 ${isList ? 'md:pt-0 md:border-l md:border-stone-200 md:pl-5 shrink-0' : 'border-t border-stone-200/80'}">
+              <div class="flex items-center gap-1" title="Reordenar posición en el DOM">
+                <button onclick="moveRecipePriority('${rec.id}', 'top')" class="px-2 py-1 rounded-lg bg-white hover:bg-amber-100 border border-stone-200 text-xs font-bold text-forest" title="Fijar arriba">
+                  📌
+                </button>
+                <button onclick="moveRecipePriority('${rec.id}', 'up')" ${index === 0 ? 'disabled' : ''} class="px-2 py-1 rounded-lg bg-white hover:bg-stone-100 disabled:opacity-30 border border-stone-200 text-xs font-bold text-forest" title="Subir posición">
+                  ↑
+                </button>
+                <button onclick="moveRecipePriority('${rec.id}', 'down')" class="px-2 py-1 rounded-lg bg-white hover:bg-stone-100 border border-stone-200 text-xs font-bold text-forest" title="Bajar posición">
+                  ↓
+                </button>
+              </div>
+
+              <button onclick="openRecipeModal('${rec.id}')" class="px-3.5 py-2 rounded-xl bg-valencia hover:bg-orange-600 text-white text-xs font-bold shadow-2xs transition-colors">
+                Ver pasos →
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function openRecipeModal(recipeId) {
+      const rec = RECIPES_DATA.find(r => r.id === recipeId);
+      if (!rec) return;
+
+      const modal = document.getElementById('recipe-modal');
+      const content = document.getElementById('recipe-modal-content');
+      content.innerHTML = `
+        <span class="inline-block px-3 py-1 rounded-full bg-mint text-forest text-xs font-bold mb-2">${rec.odsTag}</span>
+        <h2 class="text-2xl font-extrabold text-forest">${rec.title}</h2>
+        <p class="text-xs text-stone-500 mt-1">⏱ Tiempo: ${rec.time} · Dificultad: ${rec.difficulty} · Desperdicio evitado: ~${rec.savedGrams} g</p>
+
+        <div class="mt-4 p-4 rounded-2xl bg-warmgray border border-stone-200 space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-forest">Ingredientes principales:</h3>
+          <p class="text-sm text-stone-700">${rec.ingredients.join(', ')}</p>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-stone-500 pt-1">Básicos de despensa:</h3>
+          <p class="text-xs text-stone-600">${rec.extraPantry.join(', ')}</p>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          <h3 class="text-sm font-bold text-forest">Preparación paso a paso:</h3>
+          <p class="text-sm text-stone-700 leading-relaxed">${rec.steps}</p>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeRecipeModal() {
+      const modal = document.getElementById('recipe-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    /**
+     * =========================================================================
+     * 6. PÁGINA 3: CALCULADORA ODS 2 Y 12 (Responsable: Miembro 3)
+     * =========================================================================
+     */
+    function syncImpactSlider(cat, val) {
+      document.getElementById(`num-${cat}`).value = val;
+      calculateODSImpact(false);
+    }
+
+    function syncImpactInput(cat, val) {
+      const clamped = Math.max(0, Math.min(20, parseFloat(val) || 0));
+      document.getElementById(`kg-${cat}`).value = Math.min(15, clamped);
+      calculateODSImpact(false);
+    }
+
+    function applyImpactPreset(f, p, l, c) {
+      document.getElementById('kg-frutas').value = f;
+      document.getElementById('num-frutas').value = f;
+      document.getElementById('kg-pan').value = p;
+      document.getElementById('num-pan').value = p;
+      document.getElementById('kg-lacteos').value = l;
+      document.getElementById('num-lacteos').value = l;
+      document.getElementById('kg-carne').value = c;
+      document.getElementById('num-carne').value = c;
+      calculateODSImpact(true);
+    }
+
+    function calculateODSImpact(notify) {
+      const vals = {
+        frutas: parseFloat(document.getElementById('num-frutas').value) || 0,
+        pan: parseFloat(document.getElementById('num-pan').value) || 0,
+        lacteos: parseFloat(document.getElementById('num-lacteos').value) || 0,
+        carne: parseFloat(document.getElementById('num-carne').value) || 0
+      };
+
+      const totalKg = vals.frutas + vals.pan + vals.lacteos + vals.carne;
+      let totalWater = 0;
+      let totalCo2 = 0;
+      let totalEur = 0;
+
+      // Renderizar tabla de equivalencias
+      const tbody = document.getElementById('equivalences-tbody');
+      tbody.innerHTML = Object.keys(IMPACT_FACTORS).map(key => {
+        const f = IMPACT_FACTORS[key];
+        const kg = vals[key];
+        const w = Math.round(kg * f.water);
+        const c = (kg * f.co2).toFixed(1);
+        const e = (kg * f.eur).toFixed(2);
+
+        totalWater += w;
+        totalCo2 += kg * f.co2;
+        totalEur += kg * f.eur;
+
+        return `
+          <tr class="hover:bg-warmgray/60">
+            <td class="py-2.5 px-3 font-semibold text-forest">${f.label}</td>
+            <td class="py-2.5 px-3 text-stone-600">${f.water.toLocaleString('es-ES')} L</td>
+            <td class="py-2.5 px-3 text-stone-600">${f.co2.toFixed(1)} kg</td>
+            <td class="py-2.5 px-3 text-stone-600">${f.eur.toFixed(2)} €</td>
+            <td class="py-2.5 px-3 text-right font-bold text-sage">${w.toLocaleString('es-ES')} L / ${e} €</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Actualizar KPIs
+      document.getElementById('impact-total-kg').textContent = totalKg.toFixed(1);
+      document.getElementById('res-water').textContent = `${totalWater.toLocaleString('es-ES')} L`;
+      document.getElementById('res-co2').textContent = `${totalCo2.toFixed(1)} kg`;
+      document.getElementById('res-money').textContent = `${totalEur.toFixed(2).replace('.', ',')} €`;
+
+      const showers = Math.round(totalWater / 50);
+      const kmCar = Math.round(totalCo2 / 0.12);
+      document.getElementById('res-equivalence-text').innerHTML =
+        `Equivale a ahorrar <strong>${showers} duchas</strong> de 5 minutos y evitar <strong>${kmCar} km</strong> en coche por València.`;
+
+      // Cambio de estilo dinámico en tarjeta de rango y barra de progreso
+      const rankCard = document.getElementById('ods-rank-card');
+      const rankTitle = document.getElementById('ods-rank-title');
+      const rankIcon = document.getElementById('ods-rank-icon');
+      const progressBar = document.getElementById('impact-progress-bar');
+      const progressPct = document.getElementById('impact-progress-pct');
+
+      const pct = Math.min(100, Math.round((totalKg / 10) * 100));
+      progressBar.style.width = `${pct}%`;
+      progressPct.textContent = `${pct}%`;
+
+      if (totalKg < 3) {
+        rankCard.className = 'rounded-3xl p-6 sm:p-8 shadow-card border-2 transition-all duration-500 bg-amber-50 border-amberalert text-amber-950';
+        rankTitle.textContent = 'Nivel 1: Consumidor Consciente';
+        rankIcon.textContent = '🌱';
+        progressBar.className = 'h-full rounded-full transition-all duration-500 bg-amberalert';
+      } else if (totalKg < 8) {
+        rankCard.className = 'rounded-3xl p-6 sm:p-8 shadow-card border-2 transition-all duration-500 bg-mint/50 border-sage text-forest';
+        rankTitle.textContent = 'Nivel 2: Héroe Huertano';
+        rankIcon.textContent = '🌿';
+        progressBar.className = 'h-full rounded-full transition-all duration-500 bg-sage';
+      } else {
+        rankCard.className = 'rounded-3xl p-6 sm:p-8 shadow-card border-2 transition-all duration-500 bg-forest border-valencia text-white';
+        rankTitle.textContent = 'Nivel 3: Embajador ODS València';
+        rankIcon.textContent = '🏆';
+        progressBar.className = 'h-full rounded-full transition-all duration-500 bg-valencia';
+      }
+
+      // Aparición y desaparición de Consejos Personalizados según categoría con mayor ahorro
+      const tipsBox = document.getElementById('conservation-tips-box');
+      if (totalKg <= 0) {
+        tipsBox.classList.add('hidden');
+      } else {
+        tipsBox.classList.remove('hidden');
+        const topCat = Object.keys(vals).reduce((a, b) => (vals[a] >= vals[b] ? a : b));
+        document.getElementById('tips-category-title').textContent =
+          `Consejos de Conservación: ${IMPACT_FACTORS[topCat].label} (${vals[topCat].toFixed(1)} kg salvados)`;
+
+        const tipsGrid = document.getElementById('conservation-tips-grid');
+        tipsGrid.innerHTML = CONSERVATION_TIPS[topCat].map(tip => `
+          <div class="p-4 rounded-2xl bg-warmgray border border-stone-200 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-forest text-sm">
+              <span class="text-lg">${tip.icon}</span>
+              <h4>${tip.title}</h4>
+            </div>
+            <p class="text-xs text-stone-600 leading-relaxed">${tip.text}</p>
+          </div>
+        `).join('');
+      }
+
+      if (notify) {
+        showToast(`📊 Impacto actualizado: ${totalKg.toFixed(1)} kg salvados (${totalEur.toFixed(2)} € ahorrados).`);
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 7. PÁGINA 4: RED SOLIDARIA VALÈNCIA (Responsable: Miembro 4)
+     * =========================================================================
+     */
+    function reorderSolidarityCenters(sortBy) {
+      const sorted = [...SOLIDARITY_CENTERS].sort((a, b) => {
+        if (sortBy === 'urgency') return a.urgencyRank - b.urgencyRank;
+        if (sortBy === 'distance') return a.distanceUpvKm - b.distanceUpvKm;
+        return a.name.localeCompare(b.name, 'es');
+      });
+
+      const cardsGrid = document.getElementById('solidarity-cards-grid');
+      const tbody = document.getElementById('solidarity-tbody');
+
+      cardsGrid.innerHTML = sorted.map(center => {
+        const badgeStyle = center.urgency === 'Alta'
+          ? 'bg-valencia text-white'
+          : center.urgency === 'Media'
+            ? 'bg-amber-100 text-amber-900 border border-amber-300'
+            : 'bg-mint text-forest';
+
+        const isSelected = selectedCenterId === center.id;
+
+        return `
+          <div
+            onmouseover="showCenterDetail('${center.id}')"
+            onclick="showCenterDetail('${center.id}')"
+            class="cursor-pointer rounded-2xl p-4 border-2 transition-all ${isSelected ? 'border-valencia bg-orange-50/50 shadow-md -translate-y-0.5' : 'border-stone-200 bg-white hover:border-sage shadow-2xs'}"
+          >
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${badgeStyle}">
+                Urgencia ${center.urgency}
+              </span>
+              <span class="text-[11px] font-bold text-sage">🎓 ${center.distanceUpvKm} km UPV</span>
+            </div>
+            <h3 class="text-sm font-extrabold text-forest leading-snug">${center.name}</h3>
+            <p class="text-[11px] text-stone-500 mt-1">📍 ${center.district}</p>
+            <p class="text-xs text-stone-700 mt-2 line-clamp-2"><strong>Necesitan:</strong> ${center.needs}</p>
+          </div>
+        `;
+      }).join('');
+
+      tbody.innerHTML = sorted.map(center => {
+        const badgeStyle = center.urgency === 'Alta'
+          ? 'bg-valencia text-white'
+          : center.urgency === 'Media'
+            ? 'bg-amber-100 text-amber-900'
+            : 'bg-mint text-forest';
+
+        return `
+          <tr
+            onmouseover="showCenterDetail('${center.id}')"
+            onclick="showCenterDetail('${center.id}')"
+            class="cursor-pointer hover:bg-orange-50/60 transition-colors"
+          >
+            <td class="py-3 px-3.5 font-bold text-forest">${center.name}</td>
+            <td class="py-3 px-3.5 text-xs text-stone-600">${center.district}</td>
+            <td class="py-3 px-3.5 text-xs text-stone-600">${center.schedule}</td>
+            <td class="py-3 px-3.5">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${badgeStyle}">${center.urgency}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Aparición del panel lateral de detalles (mouseover o click)
+    function showCenterDetail(centerId) {
+      const center = SOLIDARITY_CENTERS.find(c => c.id === centerId);
+      if (!center) return;
+
+      selectedCenterId = centerId;
+      document.getElementById('center-detail-placeholder').classList.add('hidden');
+
+      const panel = document.getElementById('center-detail-panel');
+      panel.classList.remove('hidden');
+      panel.classList.add('flex');
+
+      document.getElementById('detail-urgency-badge').textContent = `Urgencia ${center.urgency} · ${center.distanceUpvKm} km de UPV`;
+      document.getElementById('detail-name').textContent = center.name;
+      document.getElementById('detail-address').textContent = `📍 ${center.address} (${center.district}) · ${center.schedule}`;
+      document.getElementById('detail-transport').textContent = center.transport;
+      document.getElementById('detail-requirements').textContent = center.requirements;
+
+      // Actualizar marcador del mapa OpenStreetMap al centro seleccionado
+      const iframe = document.getElementById('valencia-osm-iframe');
+      const delta = 0.015;
+      const bbox = `${(center.lon - delta).toFixed(4)}%2C${(center.lat - delta).toFixed(4)}%2C${(center.lon + delta).toFixed(4)}%2C${(center.lat + delta).toFixed(4)}`;
+      iframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${center.lat}%2C${center.lon}`;
+      document.getElementById('map-focus-label').textContent = `Centrado en: ${center.shortName}`;
+
+      // Actualizar borde activo de tarjetas sin perder foco
+      reorderSolidarityCenters(document.getElementById('sort-centers-select').value);
+    }
+
+    function hideCenterDetail() {
+      selectedCenterId = null;
+      document.getElementById('center-detail-panel').classList.add('hidden');
+      document.getElementById('center-detail-panel').classList.remove('flex');
+      document.getElementById('center-detail-placeholder').classList.remove('hidden');
+      reorderSolidarityCenters(document.getElementById('sort-centers-select').value);
+    }
+
+    function preselectCenterInForm() {
+      if (!selectedCenterId) return;
+      const center = SOLIDARITY_CENTERS.find(c => c.id === selectedCenterId);
+      if (center) {
+        document.getElementById('donor-center').value = center.name;
+        document.getElementById('donor-name').focus();
+      }
+    }
+
+    // Formulario de registro de donación o voluntariado
+    document.getElementById('donation-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('donor-name').value.trim();
+      const type = document.getElementById('donor-type').value;
+      const center = document.getElementById('donor-center').value;
+      const notes = document.getElementById('donor-notes').value.trim();
+
+      if (!name || !notes) return;
+
+      const refCode = 'VLC-ODS-' + Math.floor(1000 + Math.random() * 9000);
+      const box = document.getElementById('donation-confirmation-box');
+      box.classList.remove('hidden');
+      box.innerHTML = `
+        <p class="font-extrabold text-sm">✅ ¡Compromiso registrado con éxito! (${refCode})</p>
+        <p>Gracias, <strong>${name}</strong>. Hemos registrado tu solicitud de <strong>${type}</strong> para <strong>${center}</strong>.</p>
+        <p class="text-[11px] text-sage pt-1">Detalle: "${notes}"</p>
+      `;
+
+      this.reset();
+      showToast(`🤝 Registro solidario confirmado (${refCode}).`);
+    });
+
+    /**
+     * =========================================================================
+     * 8. ARRANQUE DE LA APLICACIÓN AL CARGAR LA VENTANA
+     * =========================================================================
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderFridgeTable();
+      renderDraggableFridge();
+      initPotDropzone();
+      renderPot();
+      renderRecipes();
+      calculateODSImpact(false);
+      reorderSolidarityCenters('urgency');
+      renderEduVideoFrame();
+
+      // Control del scrubber del reproductor multimedia
+      const scrubber = document.getElementById('video-scrubber');
+      if (scrubber) {
+        scrubber.addEventListener('input', (e) => {
+          videoTime = parseFloat(e.target.value) || 0;
+          renderEduVideoFrame();
+        });
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      renderEduVideoFrame();
+    });
+  </script>
+</body>
+</html>

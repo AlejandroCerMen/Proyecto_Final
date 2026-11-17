@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Nevera Sostenible — Red Solidaria y Puntos | UPV</title>
+    <!-- Estilos CSS externos -->
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- ====================================================================
+         ENCABEZADO PRINCIPAL
+         ==================================================================== -->
+    <header>
+        <h1>Tu Nevera Sostenible</h1>
+        <p>Aprovechamiento de alimentos y consumo responsable en València</p>
+    </header>
+
+    <!-- ====================================================================
+         BARRA DE NAVEGACIÓN
+         ==================================================================== -->
+    <nav>
+        <ul>
+            <li><a href="index.html">1. Inicio y Mi Nevera</a></li>
+            <li><a href="recetas.html">2. La Olla Virtual (Recetas)</a></li>
+            <li><a href="impacto.html">3. Calculadora de Impacto</a></li>
+            <li><a href="donaciones.html" class="activo">4. Red Solidaria y Puntos</a></li>
+        </ul>
+    </nav>
+
+    <!-- ====================================================================
+         CONTENIDO PRINCIPAL
+         ==================================================================== -->
+    <main>
+
+        <!-- Bloque explicativo -->
+        <section class="bloque-intro">
+            <h2>4. Red Solidaria y Puntos de Entrega en València</h2>
+            <p>
+                Si tienes excedentes de comida en perfecto estado que no vas a consumir antes de que venzan, 
+                no los tires. A través de esta red colaborativa conectamos a ciudadanos y estudiantes con 
+                comedores sociales y bancos de alimentos locales de València, contribuyendo directamente al 
+                <strong>ODS 2: Hambre Cero</strong>.
+            </p>
+            <p>
+                Puedes consultar los puntos activos en el mapa, filtrar la tabla de centros y registrar tu donación 
+                mediante el formulario inferior.
+            </p>
+        </section>
+
+        <!-- Bloque Multimedia: Iframe interactivo (Mapa de València con OpenStreetMap) -->
+        <section class="contenedor-multimedia">
+            <h3>📍 Mapa de Puntos de Donación en València</h3>
+            <p style="margin-bottom: 15px; font-size: 0.9rem; color: #52677b;">
+                Localización geográfica de los principales centros receptores de alimentos en la ciudad:
+            </p>
+            <!-- Iframe embebido cumpliendo el requisito del enunciado -->
+            <iframe 
+                class="iframe-responsive"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.418%2C39.450%2C-0.340%2C39.495&amp;layer=mapnik"
+                title="Mapa de comedores sociales y bancos de alimentos de València">
+            </iframe>
+            <p style="margin-top: 8px; font-size: 0.8rem; text-align: right;">
+                <a href="https://www.openstreetmap.org" target="_blank" rel="noopener noreferrer">Ver mapa más grande en OpenStreetMap</a>
+            </p>
+        </section>
+
+        <!-- Directorio de Centros y Comedores Sociales (Tabla HTML) -->
+        <section class="bloque-intro">
+            <h3>Directorio de Centros Receptores</h3>
+            <p style="margin-bottom: 15px;">Filtra los centros según el distrito o zona de València:</p>
+
+            <div class="grupo-campo" style="max-width: 320px; margin-bottom: 20px;">
+                <label for="filtro-zona-comedor">Filtrar por Zona:</label>
+                <select id="filtro-zona-comedor">
+                    <option value="todas">-- Todas las zonas de València --</option>
+                    <option value="ciutat-vella">Ciutat Vella / Centro</option>
+                    <option value="benimaclet">Benimaclet / Universitats</option>
+                    <option value="maritim">Poblats Marítims / Cabanyal</option>
+                    <option value="campanar">Campanar</option>
+                </select>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table id="tabla-comedores">
+                    <thead>
+                        <tr>
+                            <th>Entidad / Centro</th>
+                            <th>Zona</th>
+                            <th>Dirección</th>
+                            <th>Horario de Recepción</th>
+                            <th>Alimentos Prioritarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-zona="ciutat-vella">
+                            <td><strong>Casa de la Caridad</strong></td>
+                            <td>Ciutat Vella / Centro</td>
+                            <td>Carrer de Santa Cruz de Tenerife, 2</td>
+                            <td>Lunes a Domingo (9:00 - 18:00)</td>
+                            <td>Frescos, legumbres, arroz</td>
+                        </tr>
+                        <tr data-zona="benimaclet">
+                            <td><strong>Despensa Solidaria Benimaclet</strong></td>
+                            <td>Benimaclet / Universitats</td>
+                            <td>Carrer del Doctor Vicente Pallarés, 14</td>
+                            <td>Martes y Jueves (17:00 - 20:00)</td>
+                            <td>Fruta, verdura, conservas</td>
+                        </tr>
+                        <tr data-zona="maritim">
+                            <td><strong>Comedor San José (El Cabanyal)</strong></td>
+                            <td>Poblats Marítims / Cabanyal</td>
+                            <td>Carrer d'Eugènia Viñes, 88</td>
+                            <td>Lunes a Viernes (10:00 - 14:00)</td>
+                            <td>Lácteos, pan, aceite</td>
+                        </tr>
+                        <tr data-zona="campanar">
+                            <td><strong>Banco de Alimentos de Valencia</strong></td>
+                            <td>Campanar</td>
+                            <td>Av. de Manuel de Falla, 7</td>
+                            <td>Lunes a Sábado (8:30 - 15:00)</td>
+                            <td>Alimentos no perecederos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Formulario de Registro de Donación -->
+        <section>
+            <form id="form-donacion">
+                <fieldset>
+                    <legend>Formulario de Donación de Excedentes de Alimentos</legend>
+
+                    <div class="fila-formulario">
+                        <div class="grupo-campo">
+                            <label for="donante-nombre">Tu Nombre y Apellidos:</label>
+                            <input type="text" id="donante-nombre" placeholder="Ej. Carlos Navarro" required>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="donante-email">Correo Electrónico:</label>
+                            <input type="email" id="donante-email" placeholder="ejemplo@alumni.upv.es" required>
+                        </div>
+                    </div>
+
+                    <div class="fila-formulario">
+                        <div class="grupo-campo">
+                            <label for="donante-alimento">Tipo de Alimento que Donas:</label>
+                            <select id="donante-alimento">
+                                <option value="Frutas y hortalizas frescas">Frutas y hortalizas frescas</option>
+                                <option value="Arroz, pasta y legumbres">Arroz, pasta y legumbres</option>
+                                <option value="Pan y productos de panadería">Pan y productos de panadería</option>
+                                <option value="Lácteos precintados">Lácteos precintados</option>
+                                <option value="Conservas y latas">Conservas y latas</option>
+                            </select>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="donante-cantidad">Cantidad aproximada (kg/unidades):</label>
+                            <input type="number" id="donante-cantidad" min="1" max="100" value="3" required>
+                        </div>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="donante-centro">Centro al que deseas entregar:</label>
+                        <select id="donante-centro">
+                            <option value="caridad">Casa de la Caridad (Centro)</option>
+                            <option value="benimaclet">Despensa Solidaria Benimaclet</option>
+                            <option value="sanjose">Comedor San José (El Cabanyal)</option>
+                            <option value="banco">Banco de Alimentos (Campanar)</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-campo" style="margin-top: 15px;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                            <input type="checkbox" id="donante-condiciones" required>
+                            <span>Confirmo que los alimentos están dentro de fecha apta para el consumo y en buen estado higiénico.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-secundario" style="margin-top: 10px;">Registrar Donación Solidaria</button>
+                </fieldset>
+            </form>
+
+            <!-- Mensaje de éxito dinámico tras registrar la donación -->
+            <div id="mensaje-exito-donacion" class="caja-exito" style="display: none;">
+                <h4>✅ Donación Registrada con Éxito</h4>
+                <p id="detalle-donacion"></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================================================================
+         PIE DE PÁGINA
+         ==================================================================== -->
+    <footer>
+        <p><strong>Tu Nevera Sostenible</strong> — Proyecto de la parte web</p>
+        <p>Asignatura: Programación Web y Sistemas Inmersivos | Universitat Politècnica de València (UPV)</p>
+        <p>Curso 2026-2027</p>
+    </footer>
+
+    <!-- Script JavaScript específico de Donaciones -->
+    <script src="js/donaciones.js"></script>
+</body>
+</html>

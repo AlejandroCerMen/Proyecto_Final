@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Nevera Sostenible — Inicio y Mi Nevera | UPV</title>
+    <!-- Estilos CSS externos -->
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- ====================================================================
+         ENCABEZADO PRINCIPAL
+         ==================================================================== -->
+    <header>
+        <h1>Tu Nevera Sostenible</h1>
+        <p>Aprovechamiento de alimentos y consumo responsable en València</p>
+    </header>
+
+    <!-- ====================================================================
+         BARRA DE NAVEGACIÓN PRINCIPAL
+         ==================================================================== -->
+    <nav>
+        <ul>
+            <li><a href="index.html" class="activo">1. Inicio y Mi Nevera</a></li>
+            <li><a href="recetas.html">2. La Olla Virtual (Recetas)</a></li>
+            <li><a href="impacto.html">3. Calculadora de Impacto</a></li>
+            <li><a href="donaciones.html">4. Red Solidaria y Puntos</a></li>
+        </ul>
+    </nav>
+
+    <!-- ====================================================================
+         CONTENIDO PRINCIPAL
+         ==================================================================== -->
+    <main>
+
+        <!-- Bloque de introducción del proyecto y vinculación a los ODS -->
+        <section class="bloque-intro">
+            <h2>Bienvenido a Tu Nevera Sostenible</h2>
+            <p>
+                Cada año se desperdician en los hogares toneladas de comida en perfecto estado. 
+                Esta plataforma web nace como una iniciativa universitaria para ayudar a los hogares 
+                y estudiantes de València a gestionar sus alimentos, evitar que caduquen en la nevera y 
+                fomentar la solidaridad vecinal.
+            </p>
+            <p>
+                Este proyecto se enmarca dentro de la <strong>Agenda 2030</strong> y contribuye activamente a dos 
+                <strong>Objetivos de Desarrollo Sostenible (ODS)</strong>:
+            </p>
+            
+            <div class="badges-ods">
+                <span class="badge badge-ods2">ODS 2: Hambre Cero (Aprovechamiento y Donación)</span>
+                <span class="badge badge-ods12">ODS 12: Producción y Consumo Responsables</span>
+            </div>
+        </section>
+
+        <!-- Sección Interactiva: Mi Nevera e Inventario -->
+        <section class="bloque-intro">
+            <h2>Gestión de Mi Nevera e Inventario</h2>
+            <p>
+                Lleva el control de los productos frescos y alimentos que tienes en tu despensa. 
+                Utiliza las herramientas para vigilar fechas de caducidad y evitar el desperdicio.
+            </p>
+
+            <!-- Panel de botones para cumplir requisitos interactivos de JavaScript -->
+            <div class="panel-botones">
+                <!-- Requisito a: Aparición y desaparición de elementos -->
+                <button type="button" id="btn-toggle-consejo" class="btn-secundario">Mostrar Consejos de Conservación</button>
+                
+                <!-- Requisito b: Cambios de estilo en elementos -->
+                <button type="button" id="btn-modo-alerta" class="btn-secundario">Activar Modo Alerta de Caducidad</button>
+                
+                <!-- Requisito c: Cambio de la estructura de la página (reordenar DOM) -->
+                <button type="button" id="btn-reordenar">Mover Alimentos Urgentes al Principio</button>
+            </div>
+
+            <!-- Caja de consejos que aparece y desaparece dinámicamente (Requisito a) -->
+            <div id="caja-consejos" class="caja-consejo" style="display: none;">
+                <h4>💡 Consejos Clave para Conservar Alimentos en València:</h4>
+                <ul>
+                    <li><strong>Tomates y cítricos:</strong> Conservar a temperatura ambiente en lugar seco para no perder sabor.</li>
+                    <li><strong>Verduras de hoja (espinacas, acelgas):</strong> Guardar en el cajón inferior de la nevera con papel absorbente.</li>
+                    <li><strong>Plátanos y manzanas:</strong> Mantener separados de otras frutas porque desprenden etileno y aceleran la maduración.</li>
+                    <li><strong>Sobras cocinadas:</strong> Guardar en recipientes herméticos una vez templadas y consumir en 48-72 horas.</li>
+                </ul>
+            </div>
+
+            <!-- Resumen de estadísticas del inventario -->
+            <p>
+                Total de alimentos registrados: <strong id="total-alimentos">4</strong> | 
+                Alimentos urgentes por vencer: <strong id="total-urgentes" style="color: #c53030;">2</strong>
+            </p>
+
+            <!-- Formulario HTML para registrar nuevos alimentos -->
+            <form id="form-alimento">
+                <fieldset>
+                    <legend>Añadir Nuevo Alimento a la Nevera</legend>
+                    <div class="fila-formulario">
+                        <div class="grupo-campo">
+                            <label for="input-alimento">Nombre del alimento:</label>
+                            <input type="text" id="input-alimento" placeholder="Ej. Tomates de El Perelló" required>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="select-categoria">Categoría:</label>
+                            <select id="select-categoria">
+                                <option value="Frutas y Verduras">Frutas y Verduras</option>
+                                <option value="Lácteos y Huevos">Lácteos y Huevos</option>
+                                <option value="Cereales y Pan">Cereales y Pan</option>
+                                <option value="Legumbres">Legumbres</option>
+                                <option value="Proteínas y Carnes">Proteínas y Carnes</option>
+                            </select>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="input-fecha">Fecha de caducidad:</label>
+                            <input type="date" id="input-fecha" required>
+                        </div>
+                        <div class="grupo-campo">
+                            <label for="input-cantidad">Cantidad (unidades/kg):</label>
+                            <input type="number" id="input-cantidad" value="1" min="1">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-anadir">Añadir a la Nevera</button>
+                </fieldset>
+            </form>
+
+            <!-- Tabla de inventario actual -->
+            <h3>Inventario Actual en la Nevera</h3>
+            <div class="tabla-contenedor">
+                <table id="tabla-alimentos">
+                    <thead>
+                        <tr>
+                            <th>Alimento</th>
+                            <th>Categoría</th>
+                            <th>Fecha Límite</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla-alimentos">
+                        <!-- Fila 1: Muy urgente -->
+                        <tr data-estado="muy-urgente">
+                            <td><strong>Leche fresca de vaca</strong> (1 litro)</td>
+                            <td>Lácteos y Huevos</td>
+                            <td>2026-11-18</td>
+                            <td><span class="etiqueta-estado estado-caducando">¡Consumir ya!</span></td>
+                            <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
+                        </tr>
+                        <!-- Fila 2: Urgente -->
+                        <tr data-estado="urgente">
+                            <td><strong>Tomates de El Perelló</strong> (4 piezas)</td>
+                            <td>Frutas y Verduras</td>
+                            <td>2026-11-20</td>
+                            <td><span class="etiqueta-estado estado-pronto">Próximo a vencer</span></td>
+                            <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
+                        </tr>
+                        <!-- Fila 3: Óptimo -->
+                        <tr data-estado="optimo">
+                            <td><strong>Arroz Bomba de la Albufera</strong> (1 paquete)</td>
+                            <td>Cereales y Pan</td>
+                            <td>2027-02-15</td>
+                            <td><span class="etiqueta-estado estado-optimo">Óptimo</span></td>
+                            <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
+                        </tr>
+                        <!-- Fila 4: Óptimo -->
+                        <tr data-estado="optimo">
+                            <td><strong>Naranjas de Valencia</strong> (6 piezas)</td>
+                            <td>Frutas y Verduras</td>
+                            <td>2026-11-28</td>
+                            <td><span class="etiqueta-estado estado-optimo">Óptimo</span></td>
+                            <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Accesos rápidos a los otros módulos -->
+        <h2 class="seccion-titulo">Módulos del Sistema Web</h2>
+        <div class="grid-secciones">
+            <article class="tarjeta-menu">
+                <div>
+                    <h3>2. La Olla Virtual de Aprovechamiento</h3>
+                    <p>Arrastra ingredientes a la cazuela para obtener recetas de aprovechamiento y no tirar nada.</p>
+                </div>
+                <a href="recetas.html" class="btn-enlace">Ir a la Olla Virtual</a>
+            </article>
+
+            <article class="tarjeta-menu">
+                <div>
+                    <h3>3. Calculadora de Impacto</h3>
+                    <p>Calcula los kilogramos de comida salvados, CO₂ evitado y dinero ahorrado al año.</p>
+                </div>
+                <a href="impacto.html" class="btn-enlace">Calcular Impacto</a>
+            </article>
+
+            <article class="tarjeta-menu">
+                <div>
+                    <h3>4. Red Solidaria y Puntos</h3>
+                    <p>Dona excedentes a comedores sociales y consulta el mapa de puntos de recogida en València.</p>
+                </div>
+                <a href="donaciones.html" class="btn-enlace btn-secundario">Ver Red Solidaria</a>
+            </article>
+        </div>
+
+    </main>
+
+    <!-- ====================================================================
+         PIE DE PÁGINA
+         ==================================================================== -->
+    <footer>
+        <p><strong>Tu Nevera Sostenible</strong> — Proyecto de la parte web</p>
+        <p>Asignatura: Programación Web y Sistemas Inmersivos | Universitat Politècnica de València (UPV)</p>
+        <p>Curso 2026-2027</p>
+    </footer>
+
+    <!-- Script JavaScript específico de la Nevera -->
+    <script src="js/nevera.js"></script>
+</body>
+</html>
