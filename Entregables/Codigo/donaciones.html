@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Nevera Sostenible — Red Solidaria y Puntos | UPV</title>
-    <!-- Estilos CSS externos -->
+    
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
-    <!-- ====================================================================
-         ENCABEZADO PRINCIPAL
-         ==================================================================== -->
     <header>
         <h1>Tu Nevera Sostenible</h1>
         <p>Aprovechamiento de alimentos y consumo responsable en València</p>
     </header>
 
-    <!-- ====================================================================
-         BARRA DE NAVEGACIÓN
-         ==================================================================== -->
     <nav>
         <ul>
             <li><a href="index.html">1. Inicio y Mi Nevera</a></li>
@@ -29,12 +23,8 @@
         </ul>
     </nav>
 
-    <!-- ====================================================================
-         CONTENIDO PRINCIPAL
-         ==================================================================== -->
     <main>
 
-        <!-- Bloque explicativo -->
         <section class="bloque-intro">
             <h2>4. Red Solidaria y Puntos de Entrega en València</h2>
             <p>
@@ -49,24 +39,32 @@
             </p>
         </section>
 
-        <!-- Bloque Multimedia: Iframe interactivo (Mapa de València con OpenStreetMap) -->
         <section class="contenedor-multimedia">
-            <h3>📍 Mapa de Puntos de Donación en València</h3>
-            <p style="margin-bottom: 15px; font-size: 0.9rem; color: #52677b;">
-                Localización geográfica de los principales centros receptores de alimentos en la ciudad:
+            <h3>Mapa de Puntos de Donación en València</h3>
+            <p style="margin-bottom: 12px; font-size: 0.95rem; color: #52677b;">
+                Localización geográfica de los principales centros receptores de alimentos. Por defecto se muestran todos los puntos a la vez; puedes pulsar sobre cualquiera de ellos para enfocarlo:
             </p>
-            <!-- Iframe embebido cumpliendo el requisito del enunciado -->
+
+            <div class="panel-botones" style="margin-bottom: 12px;">
+                <button type="button" class="btn-enlace btn-cambiar-mapa" data-id="" data-nombre="Todos los centros visibles en el mapa">Ver todos los puntos</button>
+                <button type="button" class="btn-secundario btn-cambiar-mapa" data-id="1" data-nombre="Casa de la Caridad (Pechina / Centro)">1. Casa de la Caridad</button>
+                <button type="button" class="btn-secundario btn-cambiar-mapa" data-id="2" data-nombre="Despensa Solidaria Benimaclet">2. Despensa Benimaclet</button>
+                <button type="button" class="btn-secundario btn-cambiar-mapa" data-id="3" data-nombre="Comedor San José (El Cabanyal)">3. Comedor San José</button>
+                <button type="button" class="btn-secundario btn-cambiar-mapa" data-id="4" data-nombre="Banco de Alimentos (Campanar)">4. Banco de Alimentos</button>
+            </div>
+
             <iframe 
+                id="mapa-valencia"
                 class="iframe-responsive"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=-0.418%2C39.450%2C-0.340%2C39.495&amp;layer=mapnik"
+                src="mapa-valencia.html"
                 title="Mapa de comedores sociales y bancos de alimentos de València">
             </iframe>
-            <p style="margin-top: 8px; font-size: 0.8rem; text-align: right;">
-                <a href="https://www.openstreetmap.org" target="_blank" rel="noopener noreferrer">Ver mapa más grande en OpenStreetMap</a>
+
+            <p id="info-marcador-mapa" style="margin-top: 10px; font-weight: bold; color: #1e3a5f;">
+                Visualización actual: Todos los puntos solidarios visibles en el mapa de València.
             </p>
         </section>
 
-        <!-- Directorio de Centros y Comedores Sociales (Tabla HTML) -->
         <section class="bloque-intro">
             <h3>Directorio de Centros Receptores</h3>
             <p style="margin-bottom: 15px;">Filtra los centros según el distrito o zona de València:</p>
@@ -91,6 +89,7 @@
                             <th>Dirección</th>
                             <th>Horario de Recepción</th>
                             <th>Alimentos Prioritarios</th>
+                            <th>Ubicación</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,6 +99,7 @@
                             <td>Carrer de Santa Cruz de Tenerife, 2</td>
                             <td>Lunes a Domingo (9:00 - 18:00)</td>
                             <td>Frescos, legumbres, arroz</td>
+                            <td><button type="button" class="btn-secundario btn-cambiar-mapa" data-id="1" data-nombre="Casa de la Caridad (Pechina / Centro)">Ver en mapa</button></td>
                         </tr>
                         <tr data-zona="benimaclet">
                             <td><strong>Despensa Solidaria Benimaclet</strong></td>
@@ -107,6 +107,7 @@
                             <td>Carrer del Doctor Vicente Pallarés, 14</td>
                             <td>Martes y Jueves (17:00 - 20:00)</td>
                             <td>Fruta, verdura, conservas</td>
+                            <td><button type="button" class="btn-secundario btn-cambiar-mapa" data-id="2" data-nombre="Despensa Solidaria Benimaclet">Ver en mapa</button></td>
                         </tr>
                         <tr data-zona="maritim">
                             <td><strong>Comedor San José (El Cabanyal)</strong></td>
@@ -114,6 +115,7 @@
                             <td>Carrer d'Eugènia Viñes, 88</td>
                             <td>Lunes a Viernes (10:00 - 14:00)</td>
                             <td>Lácteos, pan, aceite</td>
+                            <td><button type="button" class="btn-secundario btn-cambiar-mapa" data-id="3" data-nombre="Comedor San José (El Cabanyal)">Ver en mapa</button></td>
                         </tr>
                         <tr data-zona="campanar">
                             <td><strong>Banco de Alimentos de Valencia</strong></td>
@@ -121,13 +123,13 @@
                             <td>Av. de Manuel de Falla, 7</td>
                             <td>Lunes a Sábado (8:30 - 15:00)</td>
                             <td>Alimentos no perecederos</td>
+                            <td><button type="button" class="btn-secundario btn-cambiar-mapa" data-id="4" data-nombre="Banco de Alimentos (Campanar)">Ver en mapa</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Formulario de Registro de Donación -->
         <section>
             <form id="form-donacion">
                 <fieldset>
@@ -182,25 +184,23 @@
                 </fieldset>
             </form>
 
-            <!-- Mensaje de éxito dinámico tras registrar la donación -->
             <div id="mensaje-exito-donacion" class="caja-exito" style="display: none;">
-                <h4>✅ Donación Registrada con Éxito</h4>
+                <h4>Donación Registrada con Éxito</h4>
                 <p id="detalle-donacion"></p>
             </div>
         </section>
 
     </main>
 
-    <!-- ====================================================================
-         PIE DE PÁGINA
-         ==================================================================== -->
     <footer>
         <p><strong>Tu Nevera Sostenible</strong> — Proyecto de la parte web</p>
         <p>Asignatura: Programación Web y Sistemas Inmersivos | Universitat Politècnica de València (UPV)</p>
+        <p style="margin-top: 8px;">
+            <img src="img/logo-upv.jpg" alt="Logotipo UPV" width="120" height="45" style="vertical-align: middle;">
+        </p>
         <p>Curso 2026-2027</p>
     </footer>
 
-    <!-- Script JavaScript específico de Donaciones -->
     <script src="js/donaciones.js"></script>
 </body>
 </html>

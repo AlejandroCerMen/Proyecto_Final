@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Puntos Solidarios de Valencia</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        #mapa {
+            width: 100%;
+            height: 100%;
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 4px;
+            font-family: 'Times New Roman', Times, serif;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-titulo {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 4px;
+        }
+
+        .popup-dir {
+            font-size: 0.85rem;
+            color: #435b71;
+            margin-bottom: 4px;
+        }
+
+        .popup-alimentos {
+            font-size: 0.8rem;
+            color: #166534;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mapa"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('mapa');
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        const puntos = [
+            {
+                id: '1',
+                nombre: '1. Casa de la Caridad',
+                zona: 'Ciutat Vella / Centro',
+                direccion: 'Carrer de Santa Cruz de Tenerife, 2',
+                horario: 'Lunes a Domingo (9:00 - 18:00)',
+                alimentos: 'Frescos, legumbres, arroz',
+                lat: 39.4745,
+                lon: -0.3898
+            },
+            {
+                id: '2',
+                nombre: '2. Despensa Solidaria Benimaclet',
+                zona: 'Benimaclet / Universitats',
+                direccion: 'Carrer del Doctor Vicente Pallarés, 14',
+                horario: 'Martes y Jueves (17:00 - 20:00)',
+                alimentos: 'Fruta, verdura, conservas',
+                lat: 39.4858,
+                lon: -0.3610
+            },
+            {
+                id: '3',
+                nombre: '3. Comedor San José (El Cabanyal)',
+                zona: 'Poblats Marítims / Cabanyal',
+                direccion: "Carrer d'Eugènia Viñes, 88",
+                horario: 'Lunes a Viernes (10:00 - 14:00)',
+                alimentos: 'Lácteos, pan, aceite',
+                lat: 39.4710,
+                lon: -0.3280
+            },
+            {
+                id: '4',
+                nombre: '4. Banco de Alimentos de Valencia',
+                zona: 'Campanar',
+                direccion: 'Av. de Manuel de Falla, 7',
+                horario: 'Lunes a Sábado (8:30 - 15:00)',
+                alimentos: 'Alimentos no perecederos',
+                lat: 39.4820,
+                lon: -0.3950
+            }
+        ];
+
+        const markers = {};
+        const grupoMarcadores = [];
+
+        puntos.forEach(function (p) {
+            const marcador = L.marker([p.lat, p.lon]).addTo(map);
+            marcador.bindPopup(`
+                <div class="popup-titulo">${p.nombre}</div>
+                <div class="popup-dir">${p.direccion} (${p.zona})</div>
+                <div class="popup-dir">Horario: ${p.horario}</div>
+                <div class="popup-alimentos">Prioritario: ${p.alimentos}</div>
+            `);
+            markers[p.id] = marcador;
+            grupoMarcadores.push(marcador);
+        });
+
+        // Comprobar si hay un centro seleccionado por parametro
+        const params = new URLSearchParams(window.location.search);
+        const idSeleccionado = params.get('id');
+
+        if (idSeleccionado && markers[idSeleccionado]) {
+            const puntoActivo = puntos.find(p => p.id === idSeleccionado);
+            map.setView([puntoActivo.lat, puntoActivo.lon], 15);
+            markers[idSeleccionado].openPopup();
+        } else {
+            // Mostrar los 4 a la vez si no hay ninguno seleccionado
+            const featureGroup = L.featureGroup(grupoMarcadores);
+            map.fitBounds(featureGroup.getBounds().pad(0.15));
+        }
+    </script>
+</body>
+</html>

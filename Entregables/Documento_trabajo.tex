@@ -1,0 +1,256 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{mathptmx}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\definecolor{azulOscuro}{RGB}{30, 58, 95}
+\definecolor{azulClaro}{RGB}{2, 132, 199}
+\definecolor{grisFondo}{RGB}{240, 244, 248}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsf{Programación Web y Sistemas Inmersivos | UPV}}
+\fancyhead[R]{\small\textsf{Documento de Relación de Trabajo}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulOscuro,
+    urlcolor=azulClaro,
+    pdftitle={Documento de Relacion de Trabajo - Tu Nevera Sostenible}
+}
+
+\begin{document}
+
+% ==============================================================================
+% PÁGINA 1: ALEJANDRO
+% ==============================================================================
+\begin{center}
+    {\Large \textbf{UNIVERSITAT POLITÈCNICA DE VALÈNCIA}}\\[0.2cm]
+    {\large Programación Web y Sistemas Inmersivos --- Curso 2026--2027}\\[0.3cm]
+    {\LARGE \textbf{\color{azulOscuro}Documento de Relación de Trabajo Individual}}\\[0.2cm]
+    {\small Proyecto: \textit{Tu Nevera Sostenible (ODS 2 y ODS 12)}}
+\end{center}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.4cm}
+
+\subsection*{1. Datos del Estudiante}
+\begin{tabularx}{\textwidth}{l X l X}
+    \textbf{Nombre:} & Alejandro [Apellidos] & \textbf{DNI/NIE:} & [Completar DNI] \\
+    \textbf{Email UPV:} & [alejandro@alumni.upv.es] & \textbf{Grupo:} & [Completar grupo] \\
+\end{tabularx}
+
+\vspace{0.4cm}
+\subsection*{2. Ficheros Bajo Responsabilidad Única}
+En cumplimiento de la normativa docente, cada fichero de código cuenta con un responsable exclusivo.
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{4cm} p{3.5cm} X}
+\toprule
+\textbf{Fichero de Código} & \textbf{Tecnología} & \textbf{Descripción de Responsabilidad} \\
+\midrule
+\texttt{index.html} & HTML5 Semántico & Estructura del portal de inicio, bloque conceptual ODS 2 y 12, formulario de inserción y tabla de inventario. \\
+\addlinespace
+\texttt{js/nevera.js} & JavaScript (DOM) & Lógica de gestión de alimentos, alternancia de consejos (\texttt{style.display}), modo alerta de caducidad y reordenación (\texttt{insertBefore}). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{3. Contribución al Trabajo Global (25\%)}
+\begin{itemize}
+    \item \textbf{Diseño de arquitectura general:} Creación del esqueleto principal del sitio web y homogeneización de la cabecera, navegación y pie común.
+    \item \textbf{Gestión de alimentos:} Implementación del formulario de alta con validación de fechas y cálculo automático de la urgencia del consumo.
+    \item \textbf{Reordenación y manipulación DOM:} Desarrollo de la funcionalidad de reordenación de productos urgentes en la cabecera de la tabla y eliminación dinámica con \texttt{removeChild}.
+    \item \textbf{Dedicación estimada:} [Insertar número, ej. 25] horas de trabajo presencial y no presencial.
+\end{itemize}
+
+\subsection*{4. Declaración de Autoría y Compromiso Ético}
+El estudiante abajo firmante declara que el código de los ficheros indicados ha sido desarrollado personalmente con la colaboración de su equipo, respetando la normativa de integridad académica de la UPV.
+
+\vspace{1.2cm}
+\begin{flushright}
+    Firma del estudiante:\ \rule{6cm}{0.4pt}
+\end{flushright}
+
+\newpage
+
+% ==============================================================================
+% PÁGINA 2: LORA
+% ==============================================================================
+\begin{center}
+    {\Large \textbf{UNIVERSITAT POLITÈCNICA DE VALÈNCIA}}\\[0.2cm]
+    {\large Programación Web y Sistemas Inmersivos --- Curso 2026--2027}\\[0.3cm]
+    {\LARGE \textbf{\color{azulOscuro}Documento de Relación de Trabajo Individual}}\\[0.2cm]
+    {\small Proyecto: \textit{Tu Nevera Sostenible (ODS 2 y ODS 12)}}
+\end{center}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.4cm}
+
+\subsection*{1. Datos del Estudiante}
+\begin{tabularx}{\textwidth}{l X l X}
+    \textbf{Nombre:} & Lora [Apellidos] & \textbf{DNI/NIE:} & [Completar DNI] \\
+    \textbf{Email UPV:} & [lora@alumni.upv.es] & \textbf{Grupo:} & [Completar grupo] \\
+\end{tabularx}
+
+\vspace{0.4cm}
+\subsection*{2. Ficheros Bajo Responsabilidad Única}
+En cumplimiento de la normativa docente, cada fichero de código cuenta con un responsable exclusivo.
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{4cm} p{3.5cm} X}
+\toprule
+\textbf{Fichero de Código} & \textbf{Tecnología} & \textbf{Descripción de Responsabilidad} \\
+\midrule
+\texttt{recetas.html} & HTML5 Semántico & Maquetación del área de juego de la olla, zona de despensa arrastrable y panel de resultados de recetas. \\
+\addlinespace
+\texttt{js/recetas.js} & JavaScript (HTML5 API) & API nativa de Drag and Drop (\texttt{dragstart}, \texttt{dragover}, \texttt{drop}), persistencia con \texttt{localStorage} y detección de movimiento de ratón. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{3. Contribución al Trabajo Global (25\%)}
+\begin{itemize}
+    \item \textbf{Módulo de Drag and Drop:} Programación del flujo de arrastrar y soltar utilizando el objeto \texttt{dataTransfer} nativo de HTML5.
+    \item \textbf{Persistencia en cliente:} Implementación de guardado y recuperación en \texttt{localStorage} para que los ingredientes en la cazuela se mantengan al recargar.
+    \item \textbf{Interacción con ratón:} Configuración de eventos \texttt{mouseover}, \texttt{mousemove} y \texttt{mouseout} para mostrar información nutricional y coordenadas del cursor en vivo.
+    \item \textbf{Motor culinario:} Lógica condicional de recetas de aprovechamiento tradicionales valencianas (arroz meloso, ropa vieja, torrijas).
+    \item \textbf{Dedicación estimada:} [Insertar número, ej. 25] horas de trabajo presencial y no presencial.
+\end{itemize}
+
+\subsection*{4. Declaración de Autoría y Compromiso Ético}
+El estudiante abajo firmante declara que el código de los ficheros indicados ha sido desarrollado personalmente con la colaboración de su equipo, respetando la normativa de integridad académica de la UPV.
+
+\vspace{1.2cm}
+\begin{flushright}
+    Firma del estudiante:\ \rule{6cm}{0.4pt}
+\end{flushright}
+
+\newpage
+
+% ==============================================================================
+% PÁGINA 3: EDU
+% ==============================================================================
+\begin{center}
+    {\Large \textbf{UNIVERSITAT POLITÈCNICA DE VALÈNCIA}}\\[0.2cm]
+    {\large Programación Web y Sistemas Inmersivos --- Curso 2026--2027}\\[0.3cm]
+    {\LARGE \textbf{\color{azulOscuro}Documento de Relación de Trabajo Individual}}\\[0.2cm]
+    {\small Proyecto: \textit{Tu Nevera Sostenible (ODS 2 y ODS 12)}}
+\end{center}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.4cm}
+
+\subsection*{1. Datos del Estudiante}
+\begin{tabularx}{\textwidth}{l X l X}
+    \textbf{Nombre:} & Edu [Apellidos] & \textbf{DNI/NIE:} & [Completar DNI] \\
+    \textbf{Email UPV:} & [edu@alumni.upv.es] & \textbf{Grupo:} & [Completar grupo] \\
+\end{tabularx}
+
+\vspace{0.4cm}
+\subsection*{2. Ficheros Bajo Responsabilidad Única}
+En cumplimiento de la normativa docente, cada fichero de código cuenta con un responsable exclusivo.
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{4cm} p{3.5cm} X}
+\toprule
+\textbf{Fichero de Código} & \textbf{Tecnología} & \textbf{Descripción de Responsabilidad} \\
+\midrule
+\texttt{impacto.html} & HTML5 Semántico & Estructura de la calculadora interactiva, controles deslizantes de entrada y tarjetas de métricas anuales. \\
+\addlinespace
+\texttt{js/impacto.js} & JavaScript (Cálculo) & Lógica matemática de conversión de alimentos a CO$_2$ evitado y ahorro en euros, y cambio dinámico de insignias ecológicas. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{3. Contribución al Trabajo Global (25\%)}
+\begin{itemize}
+    \item \textbf{Modelado de datos ecológicos:} Investigación de factores de emisión de gases de efecto invernadero según categorías de alimentos (huerta, dieta mediterránea, carnes).
+    \item \textbf{Procesamiento dinámico en cliente:} Actualización reactiva de valores en pantalla mediante eventos \texttt{input} en el slider de kilogramos.
+    \item \textbf{Gamificación y estilos dinámicos:} Alteración de estilos, colores de fondo y textos del distintivo de nivel (Iniciado, Guardián, Campeón) según los kilos salvados.
+    \item \textbf{Dedicación estimada:} [Insertar número, ej. 25] horas de trabajo presencial y no presencial.
+\end{itemize}
+
+\subsection*{4. Declaración de Autoría y Compromiso Ético}
+El estudiante abajo firmante declara que el código de los ficheros indicados ha sido desarrollado personalmente con la colaboración de su equipo, respetando la normativa de integridad académica de la UPV.
+
+\vspace{1.2cm}
+\begin{flushright}
+    Firma del estudiante:\ \rule{6cm}{0.4pt}
+\end{flushright}
+
+\newpage
+
+% ==============================================================================
+% PÁGINA 4: PABLO
+% ==============================================================================
+\begin{center}
+    {\Large \textbf{UNIVERSITAT POLITÈCNICA DE VALÈNCIA}}\\[0.2cm]
+    {\large Programación Web y Sistemas Inmersivos --- Curso 2026--2027}\\[0.3cm]
+    {\LARGE \textbf{\color{azulOscuro}Documento de Relación de Trabajo Individual}}\\[0.2cm]
+    {\small Proyecto: \textit{Tu Nevera Sostenible (ODS 2 y ODS 12)}}
+\end{center}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.4cm}
+
+\subsection*{1. Datos del Estudiante}
+\begin{tabularx}{\textwidth}{l X l X}
+    \textbf{Nombre:} & Pablo [Apellidos] & \textbf{DNI/NIE:} & [Completar DNI] \\
+    \textbf{Email UPV:} & [pablo@alumni.upv.es] & \textbf{Grupo:} & [Completar grupo] \\
+\end{tabularx}
+
+\vspace{0.4cm}
+\subsection*{2. Ficheros Bajo Responsabilidad Única}
+En cumplimiento de la normativa docente, cada fichero de código cuenta con un responsable exclusivo.
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{4cm} p{3.5cm} X}
+\toprule
+\textbf{Fichero de Código} & \textbf{Tecnología} & \textbf{Descripción de Responsabilidad} \\
+\midrule
+\texttt{donaciones.html} & HTML5 Semántico & Directorio de comedores sociales de València, formulario de registro de donaciones y marco en línea \texttt{<iframe>}. \\
+\addlinespace
+\texttt{mapa-valencia.html} & HTML5 / Leaflet & Implementación del mapa interactivo con OpenStreetMap para mostrar los 4 puntos simultáneos y enfoque individual. \\
+\addlinespace
+\texttt{js/donaciones.js} & JavaScript (Eventos) & Validación de campos de formulario, confirmación dinámica en pantalla y filtrado de tablas por distritos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{3. Contribución al Trabajo Global (25\%)}
+\begin{itemize}
+    \item \textbf{Integración del mapa interactivo:} Configuración del documento para el \texttt{<iframe>} asegurando visualización de los 4 centros simultáneos y zoom interactivo al pulsar.
+    \item \textbf{Filtrado dinámico de tablas:} Programación del evento \texttt{change} sobre el selector de zonas para alternar la visibilidad (\texttt{display: none}) de las filas de centros.
+    \item \textbf{Gestión de donaciones solidarias:} Desarrollo del formulario con \texttt{<fieldset>} y confirmación en cliente tras aceptar la condición higiénico-sanitaria.
+    \item \textbf{Dedicación estimada:} [Insertar número, ej. 25] horas de trabajo presencial y no presencial.
+\end{itemize}
+
+\subsection*{4. Declaración de Autoría y Compromiso Ético}
+El estudiante abajo firmante declara que el código de los ficheros indicados ha sido desarrollado personalmente con la colaboración de su equipo, respetando la normativa de integridad académica de la UPV.
+
+\vspace{1.2cm}
+\begin{flushright}
+    Firma del estudiante:\ \rule{6cm}{0.4pt}
+\end{flushright}
+
+\end{document}

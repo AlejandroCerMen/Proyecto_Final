@@ -1,11 +1,3 @@
-/* ==========================================================================
-   ESTILOS GENERALES DEL PROYECTO: TU NEVERA SOSTENIBLE
-   Asignatura: Programación Web y Sistemas Inmersivos (UPV)
-   Temática: ODS 2 (Hambre Cero) y ODS 12 (Consumo Responsable)
-   Gama de colores: Tonos azules institucionales y limpios
-   ========================================================================== */
-
-/* Reseteo básico y modelo de caja */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,15 +5,16 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-family: 'Times New Roman', Times, serif;
     line-height: 1.6;
     background-color: #f0f4f8;
     color: #2b3a4a;
 }
 
-/* --------------------------------------------------------------------------
-   ENCABEZADO (HEADER)
-   -------------------------------------------------------------------------- */
+button, input, select, textarea {
+    font-family: inherit;
+}
+
 header {
     background-color: #1e3a5f;
     color: #ffffff;
@@ -41,9 +34,6 @@ header p {
     color: #d0e1f2;
 }
 
-/* --------------------------------------------------------------------------
-   BARRA DE NAVEGACIÓN (NAV)
-   -------------------------------------------------------------------------- */
 nav {
     background-color: #12283e;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
@@ -80,16 +70,12 @@ nav a.activo {
     color: #ffffff;
 }
 
-/* --------------------------------------------------------------------------
-   CONTENEDOR PRINCIPAL (MAIN)
-   -------------------------------------------------------------------------- */
 main {
     max-width: 1050px;
     margin: 30px auto;
     padding: 0 20px;
 }
 
-/* Bloque de introducción */
 .bloque-intro {
     background-color: #ffffff;
     border: 1px solid #d0dce8;
@@ -111,7 +97,6 @@ main {
     margin-bottom: 12px;
 }
 
-/* Insignias ODS */
 .badges-ods {
     display: flex;
     gap: 12px;
@@ -135,9 +120,6 @@ main {
     background-color: #0288d1;
 }
 
-/* --------------------------------------------------------------------------
-   TARJETAS Y SECCIONES DEL MENÚ (Flexbox)
-   -------------------------------------------------------------------------- */
 .seccion-titulo {
     color: #1e3a5f;
     margin: 25px 0 15px 0;
@@ -186,9 +168,6 @@ main {
     margin-bottom: 4px;
 }
 
-/* --------------------------------------------------------------------------
-   BOTONES
-   -------------------------------------------------------------------------- */
 .btn-enlace, button, input[type="submit"], input[type="button"] {
     display: inline-block;
     background-color: #1e3a5f;
@@ -230,9 +209,6 @@ main {
     flex-wrap: wrap;
 }
 
-/* --------------------------------------------------------------------------
-   FORMULARIOS
-   -------------------------------------------------------------------------- */
 form {
     background-color: #ffffff;
     border: 1px solid #d0dce8;
@@ -300,9 +276,6 @@ legend {
     flex: 1 1 200px;
 }
 
-/* --------------------------------------------------------------------------
-   TABLAS (Table Styles)
-   -------------------------------------------------------------------------- */
 .tabla-contenedor {
     overflow-x: auto;
     margin-bottom: 25px;
@@ -338,7 +311,6 @@ tr:hover {
     background-color: #edf4fa;
 }
 
-/* Estilos dinámicos para avisos de caducidad (JS) */
 .fila-urgente {
     background-color: #fff3cd !important;
     border-left: 5px solid #ff9800;
@@ -374,9 +346,6 @@ tr:hover {
     color: #991b1b;
 }
 
-/* --------------------------------------------------------------------------
-   CAJAS DE MENSAJES Y CONSEJOS (Aparición / Desaparición con JS)
-   -------------------------------------------------------------------------- */
 .caja-consejo {
     background-color: #e0f2fe;
     border-left: 4px solid #0284c7;
@@ -400,9 +369,6 @@ tr:hover {
     font-weight: 500;
 }
 
-/* --------------------------------------------------------------------------
-   DRAG & DROP (LA OLLA VIRTUAL)
-   -------------------------------------------------------------------------- */
 .contenedor-juego {
     display: flex;
     gap: 25px;
@@ -459,7 +425,6 @@ tr:hover {
     cursor: grabbing;
 }
 
-/* Zona de soltar (Olla) */
 .zona-drop {
     min-height: 180px;
     background-color: #eaf2f9;
@@ -500,9 +465,6 @@ tr:hover {
     margin-bottom: 10px;
 }
 
-/* --------------------------------------------------------------------------
-   CALCULADORA DE IMPACTO
-   -------------------------------------------------------------------------- */
 .panel-metricas {
     display: flex;
     gap: 15px;
@@ -532,9 +494,6 @@ tr:hover {
     color: #64748b;
 }
 
-/* --------------------------------------------------------------------------
-   MULTIMEDIA E IFRAMES
-   -------------------------------------------------------------------------- */
 .contenedor-multimedia {
     background-color: #ffffff;
     border: 1px solid #d0dce8;
@@ -555,9 +514,6 @@ tr:hover {
     border-radius: 6px;
 }
 
-/* --------------------------------------------------------------------------
-   PIE DE PÁGINA (FOOTER)
-   -------------------------------------------------------------------------- */
 footer {
     background-color: #12283e;
     color: #c9daf0;

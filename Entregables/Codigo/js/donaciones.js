@@ -1,18 +1,6 @@
-/* ==========================================================================
-   FICHERO: js/donaciones.js
-   RESPONSABLE: Miembro 4 del Equipo
-   DESCRIPCIÓN: Validación del formulario de donaciones y filtrado de la
-                tabla de comedores sociales para la página donaciones.html.
-   REQUISITOS CUBIERTOS:
-     - Validación y captura de datos de formulario
-     - Modificación dinámica de estilos y contenido (mensajes de éxito)
-     - Filtrado interactivo de filas de una tabla HTML
-   ========================================================================== */
+// Responsable: Pablo
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Módulo de Donaciones y Red Solidaria cargado correctamente.");
-
-    // Elementos del formulario
     const formDonacion = document.getElementById("form-donacion");
     const inputNombre = document.getElementById("donante-nombre");
     const inputEmail = document.getElementById("donante-email");
@@ -23,15 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const mensajeExito = document.getElementById("mensaje-exito-donacion");
     const textoDetalleDonacion = document.getElementById("detalle-donacion");
 
-    // Elementos de la tabla y su filtro
     const filtroZona = document.getElementById("filtro-zona-comedor");
     const filasComedores = document.querySelectorAll("#tabla-comedores tbody tr");
 
-    /* ----------------------------------------------------------------------
-       1. ENVÍO Y VALIDACIÓN DEL FORMULARIO DE DONACIÓN
-       ---------------------------------------------------------------------- */
+    // Validar y enviar formulario de donacion
     formDonacion.addEventListener("submit", function (evento) {
-        // Evitamos la recarga tradicional de la página
         evento.preventDefault();
 
         const nombre = inputNombre.value.trim();
@@ -41,29 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const cantidad = inputCantidad.value;
 
         if (nombre === "" || email === "") {
-            alert("Por favor, rellena tu nombre y correo electrónico.");
+            alert("Por favor, rellena tu nombre y correo electronico.");
             return;
         }
 
         if (!checkCondiciones.checked) {
-            alert("Debes confirmar que los alimentos están en perfecto estado de conservación.");
+            alert("Debes confirmar que los alimentos estan en buen estado.");
             return;
         }
 
-        // Mostrar mensaje de confirmación dinámico
-        textoDetalleDonacion.textContent = `¡Muchas gracias, ${nombre}! Hemos registrado tu donación de ${cantidad} kg de "${alimento}" para el centro "${centro}". Te hemos enviado los detalles de recogida a ${email}.`;
+        textoDetalleDonacion.textContent = `Muchas gracias, ${nombre}. Hemos registrado tu donacion de ${cantidad} kg de "${alimento}" para "${centro}". Te hemos enviado los detalles a ${email}.`;
         mensajeExito.style.display = "block";
-
-        // Desplazar suavemente hasta el mensaje
         mensajeExito.scrollIntoView({ behavior: "smooth" });
 
-        // Limpiar el formulario
         formDonacion.reset();
     });
 
-    /* ----------------------------------------------------------------------
-       2. FILTRADO INTERACTIVO DE LA TABLA DE COMEDORES (por Zona/Distrito)
-       ---------------------------------------------------------------------- */
+    // Filtrar tabla por zona
     filtroZona.addEventListener("change", function () {
         const zonaSeleccionada = filtroZona.value.toLowerCase();
 
@@ -71,10 +49,32 @@ document.addEventListener("DOMContentLoaded", function () {
             const zonaFila = fila.getAttribute("data-zona").toLowerCase();
 
             if (zonaSeleccionada === "todas" || zonaFila === zonaSeleccionada) {
-                fila.style.display = ""; // Mostrar
+                fila.style.display = "";
             } else {
-                fila.style.display = "none"; // Ocultar
+                fila.style.display = "none";
             }
+        });
+    });
+
+    // Gestion de los puntos del mapa
+    const mapaIframe = document.getElementById("mapa-valencia");
+    const textoInfoMapa = document.getElementById("info-marcador-mapa");
+    const botonesMapa = document.querySelectorAll(".btn-cambiar-mapa");
+
+    botonesMapa.forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            const id = boton.getAttribute("data-id");
+            const nombre = boton.getAttribute("data-nombre");
+
+            if (id && id !== "") {
+                mapaIframe.src = "mapa-valencia.html?id=" + id;
+                textoInfoMapa.textContent = "Punto enfocado actualmente: " + nombre + ".";
+            } else {
+                mapaIframe.src = "mapa-valencia.html";
+                textoInfoMapa.textContent = "Visualizacion actual: Todos los puntos solidarios visibles en el mapa de Valencia.";
+            }
+
+            mapaIframe.scrollIntoView({ behavior: "smooth", block: "center" });
         });
     });
 });

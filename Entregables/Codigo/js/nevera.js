@@ -1,19 +1,6 @@
-/* ==========================================================================
-   FICHERO: js/nevera.js
-   RESPONSABLE: Miembro 1 del Equipo
-   DESCRIPCIÓN: Gestión del inventario de alimentos, alertas de caducidad y
-                manipulación del DOM para la página principal (index.html).
-   REQUISITOS CUBIERTOS:
-     - Aparición y desaparición de elementos (Consejos)
-     - Cambio de estilo de elementos (Modo alerta de caducidad)
-     - Cambio en la estructura de la página (Reordenar filas con insertBefore)
-     - Inserción y eliminación de elementos en el DOM (createElement, removeChild)
-   ========================================================================== */
+// Responsable: Alejandro
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("Módulo de la Nevera cargado correctamente.");
-
-    // Referencias a elementos del DOM
     const btnToggleConsejo = document.getElementById("btn-toggle-consejo");
     const cajaConsejos = document.getElementById("caja-consejos");
     const btnModoAlerta = document.getElementById("btn-modo-alerta");
@@ -23,13 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const contadorTotal = document.getElementById("total-alimentos");
     const contadorUrgentes = document.getElementById("total-urgentes");
 
-    // Variable de estado para el modo alerta
     let modoAlertaActivo = false;
 
-    /* ----------------------------------------------------------------------
-       REQUISITO A: APARICIÓN Y DESAPARICIÓN DE ELEMENTOS
-       Muestra u oculta la caja de consejos al hacer clic
-       ---------------------------------------------------------------------- */
+    // Mostrar u ocultar la caja de consejos
     btnToggleConsejo.addEventListener("click", function () {
         if (cajaConsejos.style.display === "none" || cajaConsejos.style.display === "") {
             cajaConsejos.style.display = "block";
@@ -40,13 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /* ----------------------------------------------------------------------
-       REQUISITO B: CAMBIOS DE ESTILO EN ELEMENTOS
-       Activa o desactiva estilos destacados para alimentos que caducan pronto
-       ---------------------------------------------------------------------- */
+    // Activar o desactivar colores de alerta de caducidad
     btnModoAlerta.addEventListener("click", function () {
         modoAlertaActivo = !modoAlertaActivo;
-
         const filas = cuerpoTabla.getElementsByTagName("tr");
 
         for (let i = 0; i < filas.length; i++) {
@@ -66,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     fila.style.opacity = "0.6";
                 }
             } else {
-                // Restaurar estilos por defecto
                 fila.style.backgroundColor = "";
                 fila.style.fontWeight = "normal";
                 fila.style.borderLeft = "";
@@ -83,14 +61,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /* ----------------------------------------------------------------------
-       REQUISITO C: CAMBIO DE LA ESTRUCTURA DE LA PÁGINA (POSICIÓN EN EL DOM)
-       Reordena la tabla moviendo los alimentos urgentes al inicio con insertBefore
-       ---------------------------------------------------------------------- */
+    // Mover alimentos urgentes arriba en la tabla
     btnReordenar.addEventListener("click", function () {
         const filas = Array.from(cuerpoTabla.getElementsByTagName("tr"));
 
-        // Buscamos las filas urgentes y las movemos una a una antes del primer hijo
         for (let i = filas.length - 1; i >= 0; i--) {
             const fila = filas[i];
             const estado = fila.getAttribute("data-estado");
@@ -101,12 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        alert("Se ha cambiado la estructura de la tabla: ¡Alimentos urgentes colocados arriba!");
+        alert("Se ha cambiado la estructura de la tabla: Alimentos urgentes colocados arriba");
     });
 
-    /* ----------------------------------------------------------------------
-       AÑADIR ELEMENTOS AL INVENTARIO (CREACIÓN DINÁMICA DE NODOS)
-       ---------------------------------------------------------------------- */
+    // Añadir nuevo alimento desde el formulario
     btnAnadir.addEventListener("click", function () {
         const nombreInput = document.getElementById("input-alimento");
         const categoriaInput = document.getElementById("select-categoria");
@@ -118,36 +90,31 @@ document.addEventListener('DOMContentLoaded', function () {
         const fecha = fechaInput.value;
         const cantidad = cantidadInput.value;
 
-        // Validación simple
         if (nombre === "" || fecha === "") {
             alert("Por favor, introduce el nombre del alimento y su fecha de caducidad.");
             return;
         }
 
-        // Determinar estado de caducidad comparando con la fecha actual
         const fechaCad = new Date(fecha);
         const hoy = new Date();
         const diferenciaDias = Math.ceil((fechaCad - hoy) / (1000 * 60 * 60 * 24));
 
-        let estadoTexto = "Óptimo";
+        let estadoTexto = "Optimo";
         let estadoClase = "estado-optimo";
         let dataEstado = "optimo";
 
         if (diferenciaDias <= 1) {
-            estadoTexto = "¡Consumir ya!";
+            estadoTexto = "Consumir ya";
             estadoClase = "estado-caducando";
             dataEstado = "muy-urgente";
         } else if (diferenciaDias <= 3) {
-            estadoTexto = "Próximo a vencer";
+            estadoTexto = "Proximo a vencer";
             estadoClase = "estado-pronto";
             dataEstado = "urgente";
         }
 
-        // Crear nueva fila tr
         const nuevaFila = document.createElement("tr");
         nuevaFila.setAttribute("data-estado", dataEstado);
-
-        // Crear contenido de la fila
         nuevaFila.innerHTML = `
             <td><strong>${nombre}</strong> (${cantidad})</td>
             <td>${categoria}</td>
@@ -156,17 +123,14 @@ document.addEventListener('DOMContentLoaded', function () {
             <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
         `;
 
-        // Añadir evento al botón de eliminar recién creado
         const btnEliminar = nuevaFila.querySelector(".btn-eliminar");
         btnEliminar.addEventListener("click", function () {
             cuerpoTabla.removeChild(nuevaFila);
             actualizarContadores();
         });
 
-        // Insertar en la tabla con appendChild
         cuerpoTabla.appendChild(nuevaFila);
 
-        // Limpiar campos del formulario
         nombreInput.value = "";
         fechaInput.value = "";
         cantidadInput.value = "1";
@@ -174,9 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
         actualizarContadores();
     });
 
-    /* ----------------------------------------------------------------------
-       ELIMINACIÓN DE FILAS INICIALES EXISTENTES
-       ---------------------------------------------------------------------- */
+    // Botones de eliminar existentes
     const botonesEliminarIniciales = document.querySelectorAll(".btn-eliminar");
     botonesEliminarIniciales.forEach(function (boton) {
         boton.addEventListener("click", function () {
@@ -188,9 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ----------------------------------------------------------------------
-       FUNCIÓN AUXILIAR: ACTUALIZAR CONTADORES
-       ---------------------------------------------------------------------- */
     function actualizarContadores() {
         const filas = cuerpoTabla.getElementsByTagName("tr");
         let urgentes = 0;
@@ -206,6 +165,5 @@ document.addEventListener('DOMContentLoaded', function () {
         contadorUrgentes.textContent = urgentes;
     }
 
-    // Calcular contadores al iniciar la página
     actualizarContadores();
 });

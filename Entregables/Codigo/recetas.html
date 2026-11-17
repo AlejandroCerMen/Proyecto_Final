@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Nevera Sostenible — La Olla Virtual (Recetas) | UPV</title>
+    
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <header>
+        <h1>Tu Nevera Sostenible</h1>
+        <p>Aprovechamiento de alimentos y consumo responsable en València</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">1. Inicio y Mi Nevera</a></li>
+            <li><a href="recetas.html" class="activo">2. La Olla Virtual (Recetas)</a></li>
+            <li><a href="impacto.html">3. Calculadora de Impacto</a></li>
+            <li><a href="donaciones.html">4. Red Solidaria y Puntos</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <section class="bloque-intro">
+            <h2>2. La Olla Virtual de Aprovechamiento</h2>
+            <p>
+                ¿Tienes sobras o ingredientes que van a vencer y no sabes cómo combinarlos?
+                <strong>Arrastra los alimentos desde la despensa hasta el interior de la olla</strong>.
+                Una vez los tengas listos, pulsa el botón para cocinar y te sugeriremos una receta tradicional 
+                valenciana pensada especialmente para no tirar nada a la basura.
+            </p>
+        </section>
+
+        <section class="contenedor-juego">
+
+            <div class="panel-despensa">
+                <h3>Despensa de Ingredientes</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
+                    Haz clic y arrastra cualquiera de estos ingredientes hacia la cazuela:
+                </p>
+
+                <div id="contenedor-despensa" class="lista-ingredientes">
+                    <div id="ing-arroz" class="ingrediente-item" data-tipo="arroz">Arroz de la Albufera</div>
+                    <div id="ing-tomate" class="ingrediente-item" data-tipo="tomate">Tomates maduros</div>
+                    <div id="ing-verdura" class="ingrediente-item" data-tipo="verdura">Verduras variadas</div>
+                    <div id="ing-garbanzos" class="ingrediente-item" data-tipo="garbanzos">Garbanzos cocidos</div>
+                    <div id="ing-pollo" class="ingrediente-item" data-tipo="pollo">Pollo desmenuzado</div>
+                    <div id="ing-pan" class="ingrediente-item" data-tipo="pan">Pan del día anterior</div>
+                    <div id="ing-leche" class="ingrediente-item" data-tipo="leche">Leche fresca</div>
+                </div>
+
+                <div id="caja-info-raton" class="caja-consejo" style="display: none; margin-top: 15px;">
+                    <h4 id="info-raton-titulo">Detalles del ingrediente</h4>
+                    <p id="info-raton-texto" style="font-size: 0.9rem; margin-bottom: 6px;"></p>
+                    <p style="font-size: 0.8rem; color: #52677b; margin: 0;">
+                        Posición del cursor sobre el elemento: <span id="info-raton-coords">X: 0, Y: 0</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel-olla">
+                <h3>La Olla Virtual</h3>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">
+                    Suelta aquí dentro los ingredientes que quieras aprovechar:
+                </p>
+
+                <div id="zona-olla" class="zona-drop">
+                    <p id="texto-olla-vacia" style="color: #64748b; font-weight: 500;">
+                        Arrastra y suelta ingredientes aquí
+                    </p>
+                    <div id="ingredientes-olla" class="ingredientes-en-olla">
+                    </div>
+                </div>
+
+                <div class="panel-botones" style="margin-top: 15px;">
+                    <button type="button" id="btn-cocinar" class="btn-secundario">Cocinar Receta</button>
+                    <button type="button" id="btn-reiniciar-olla" class="btn-peligro">Vaciar Olla</button>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="resultado-receta" class="caja-receta-resultado" style="display: none;">
+            <h3 id="titulo-receta">Nombre de la Receta</h3>
+            <p id="desc-receta" style="margin-bottom: 15px; font-style: italic;"></p>
+            <h4>Pasos de preparación:</h4>
+            <ol id="pasos-receta" style="margin-left: 20px; margin-top: 10px;"></ol>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><strong>Tu Nevera Sostenible</strong> — Proyecto de la parte web</p>
+        <p>Asignatura: Programación Web y Sistemas Inmersivos | Universitat Politècnica de València (UPV)</p>
+        <p style="margin-top: 8px;">
+            <img src="img/logo-upv.jpg" alt="Logotipo UPV" width="120" height="45" style="vertical-align: middle;">
+        </p>
+        <p>Curso 2026-2027</p>
+    </footer>
+
+    <script src="js/recetas.js"></script>
+</body>
+</html>

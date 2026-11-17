@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Nevera Sostenible — Inicio y Mi Nevera | UPV</title>
-    <!-- Estilos CSS externos -->
+    
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
-    <!-- ====================================================================
-         ENCABEZADO PRINCIPAL
-         ==================================================================== -->
     <header>
         <h1>Tu Nevera Sostenible</h1>
         <p>Aprovechamiento de alimentos y consumo responsable en València</p>
     </header>
 
-    <!-- ====================================================================
-         BARRA DE NAVEGACIÓN PRINCIPAL
-         ==================================================================== -->
     <nav>
         <ul>
             <li><a href="index.html" class="activo">1. Inicio y Mi Nevera</a></li>
@@ -29,12 +23,8 @@
         </ul>
     </nav>
 
-    <!-- ====================================================================
-         CONTENIDO PRINCIPAL
-         ==================================================================== -->
     <main>
 
-        <!-- Bloque de introducción del proyecto y vinculación a los ODS -->
         <section class="bloque-intro">
             <h2>Bienvenido a Tu Nevera Sostenible</h2>
             <p>
@@ -54,7 +44,6 @@
             </div>
         </section>
 
-        <!-- Sección Interactiva: Mi Nevera e Inventario -->
         <section class="bloque-intro">
             <h2>Gestión de Mi Nevera e Inventario</h2>
             <p>
@@ -62,21 +51,14 @@
                 Utiliza las herramientas para vigilar fechas de caducidad y evitar el desperdicio.
             </p>
 
-            <!-- Panel de botones para cumplir requisitos interactivos de JavaScript -->
             <div class="panel-botones">
-                <!-- Requisito a: Aparición y desaparición de elementos -->
                 <button type="button" id="btn-toggle-consejo" class="btn-secundario">Mostrar Consejos de Conservación</button>
-                
-                <!-- Requisito b: Cambios de estilo en elementos -->
                 <button type="button" id="btn-modo-alerta" class="btn-secundario">Activar Modo Alerta de Caducidad</button>
-                
-                <!-- Requisito c: Cambio de la estructura de la página (reordenar DOM) -->
                 <button type="button" id="btn-reordenar">Mover Alimentos Urgentes al Principio</button>
             </div>
 
-            <!-- Caja de consejos que aparece y desaparece dinámicamente (Requisito a) -->
             <div id="caja-consejos" class="caja-consejo" style="display: none;">
-                <h4>💡 Consejos Clave para Conservar Alimentos en València:</h4>
+                <h4>Consejos clave para conservar alimentos en València:</h4>
                 <ul>
                     <li><strong>Tomates y cítricos:</strong> Conservar a temperatura ambiente en lugar seco para no perder sabor.</li>
                     <li><strong>Verduras de hoja (espinacas, acelgas):</strong> Guardar en el cajón inferior de la nevera con papel absorbente.</li>
@@ -85,13 +67,11 @@
                 </ul>
             </div>
 
-            <!-- Resumen de estadísticas del inventario -->
             <p>
                 Total de alimentos registrados: <strong id="total-alimentos">4</strong> | 
                 Alimentos urgentes por vencer: <strong id="total-urgentes" style="color: #c53030;">2</strong>
             </p>
 
-            <!-- Formulario HTML para registrar nuevos alimentos -->
             <form id="form-alimento">
                 <fieldset>
                     <legend>Añadir Nuevo Alimento a la Nevera</legend>
@@ -123,7 +103,6 @@
                 </fieldset>
             </form>
 
-            <!-- Tabla de inventario actual -->
             <h3>Inventario Actual en la Nevera</h3>
             <div class="tabla-contenedor">
                 <table id="tabla-alimentos">
@@ -137,7 +116,7 @@
                         </tr>
                     </thead>
                     <tbody id="cuerpo-tabla-alimentos">
-                        <!-- Fila 1: Muy urgente -->
+                        
                         <tr data-estado="muy-urgente">
                             <td><strong>Leche fresca de vaca</strong> (1 litro)</td>
                             <td>Lácteos y Huevos</td>
@@ -145,7 +124,7 @@
                             <td><span class="etiqueta-estado estado-caducando">¡Consumir ya!</span></td>
                             <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
                         </tr>
-                        <!-- Fila 2: Urgente -->
+                        
                         <tr data-estado="urgente">
                             <td><strong>Tomates de El Perelló</strong> (4 piezas)</td>
                             <td>Frutas y Verduras</td>
@@ -153,7 +132,7 @@
                             <td><span class="etiqueta-estado estado-pronto">Próximo a vencer</span></td>
                             <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
                         </tr>
-                        <!-- Fila 3: Óptimo -->
+                        
                         <tr data-estado="optimo">
                             <td><strong>Arroz Bomba de la Albufera</strong> (1 paquete)</td>
                             <td>Cereales y Pan</td>
@@ -161,7 +140,7 @@
                             <td><span class="etiqueta-estado estado-optimo">Óptimo</span></td>
                             <td><button type="button" class="btn-peligro btn-eliminar">Eliminar</button></td>
                         </tr>
-                        <!-- Fila 4: Óptimo -->
+                        
                         <tr data-estado="optimo">
                             <td><strong>Naranjas de Valencia</strong> (6 piezas)</td>
                             <td>Frutas y Verduras</td>
@@ -175,7 +154,6 @@
 
         </section>
 
-        <!-- Accesos rápidos a los otros módulos -->
         <h2 class="seccion-titulo">Módulos del Sistema Web</h2>
         <div class="grid-secciones">
             <article class="tarjeta-menu">
@@ -205,16 +183,15 @@
 
     </main>
 
-    <!-- ====================================================================
-         PIE DE PÁGINA
-         ==================================================================== -->
     <footer>
         <p><strong>Tu Nevera Sostenible</strong> — Proyecto de la parte web</p>
         <p>Asignatura: Programación Web y Sistemas Inmersivos | Universitat Politècnica de València (UPV)</p>
+        <p style="margin-top: 8px;">
+            <img src="img/logo-upv.jpg" alt="Logotipo UPV" width="120" height="45" style="vertical-align: middle;">
+        </p>
         <p>Curso 2026-2027</p>
     </footer>
 
-    <!-- Script JavaScript específico de la Nevera -->
     <script src="js/nevera.js"></script>
 </body>
 </html>

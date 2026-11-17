@@ -1,0 +1,306 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Paquetes de configuración básica y tipografía ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{mathptmx} % Tipografía Times New Roman para documento formal
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% --- Definición de colores institucionales acordes a la web ---
+\definecolor{azulOscuro}{RGB}{30, 58, 95}
+\definecolor{azulClaro}{RGB}{2, 132, 199}
+\definecolor{azulFondo}{RGB}{240, 244, 248}
+\definecolor{grisTexto}{RGB}{43, 58, 74}
+
+% --- Configuración de hiperenlaces ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulOscuro,
+    filecolor=azulClaro,      
+    urlcolor=azulClaro,
+    citecolor=azulOscuro,
+    pdftitle={Memoria Técnica - Tu Nevera Sostenible},
+    pdfauthor={Grupo de Trabajo - UPV}
+}
+
+% --- Encabezados y pies de página ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsf{Programación Web y Sistemas Inmersivos | UPV}}
+\fancyhead[R]{\small\textsf{Tu Nevera Sostenible (ODS 2 y 12)}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% --- Formato de títulos de sección ---
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{azulOscuro}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{azulClaro}}{\thesubsection}{1em}{}
+
+% ==============================================================================
+% DOCUMENTO
+% ==============================================================================
+\begin{document}
+
+% --- PORTADA ---
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Huge \textbf{Tu Nevera Sostenible}}\\[0.4cm]
+    {\Large \textsc{Aprovechamiento Alimentario y Consumo Responsable en València}}\\[1.5cm]
+    
+    \rule{\linewidth}{0.8mm}\\[0.4cm]
+    {\LARGE \textbf{Memoria Técnica del Proyecto Web}}\\[0.2cm]
+    {\large Mini-proyecto de la parte web: Especificación y Desarrollo}\\[0.4cm]
+    \rule{\linewidth}{0.8mm}\\[2cm]
+    
+    \textbf{Asignatura:}\\
+    Programación Web y Sistemas Inmersivos\\[0.3cm]
+    
+    \textbf{Profesores:}\\
+    Ignacio Lacalle, Marta Garrido, M. García Valls\\[0.8cm]
+    
+    \textbf{Institución:}\\
+    Universitat Politècnica de València (UPV)\\
+    Curso Académico 2026--2027\\[1.5cm]
+    
+    \textbf{Equipo de Trabajo (4 Miembros):}\\
+    Alejandro: Responsable de \texttt{js/nevera.js} e \texttt{index.html}\\
+    Lora: Responsable de \texttt{js/recetas.js} y \texttt{recetas.html}\\
+    Edu: Responsable de \texttt{js/impacto.js} e \texttt{impacto.html}\\
+    Pablo: Responsable de \texttt{js/donaciones.js}, \texttt{donaciones.html} y \texttt{mapa-valencia.html}\\[1.5cm]
+    
+    \vfill
+    {\small València, Noviembre de 2026}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ==============================================================================
+% 1. RELACIÓN DE TRABAJO (HOJA REQUERIDA OBLIGATORIA)
+% ==============================================================================
+\section{Documento de Relación de Trabajo y Reparto de Responsabilidades}
+
+En cumplimiento riguroso de las directrices docentes del miniproyecto, cada fichero de código fuente desarrollado para la plataforma web cuenta con un único responsable asignado. La distribución del trabajo se ha planificado de manera equilibrada para que todos los miembros participen activamente en la estructura HTML, el diseño CSS y la lógica interactiva JavaScript.
+
+\subsection{Asignación Unívoca de Ficheros de Código}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{4.5cm} X}
+\toprule
+\textbf{Miembro} & \textbf{Ficheros Asignados (Único Responsable)} & \textbf{Rol y Tareas Principales} \\
+\midrule
+\textbf{Alejandro} & \texttt{index.html}\newline \texttt{js/nevera.js} & Arquitectura del portal principal, gestión del inventario de alimentos, manipulación del DOM con \texttt{insertBefore} y \texttt{removeChild}, alertas de caducidad y toggle de consejos. \\
+\addlinespace
+\textbf{Lora} & \texttt{recetas.html}\newline \texttt{js/recetas.js} & Mecánica de arrastrar y soltar (Drag and Drop nativo), persistencia de ingredientes en la olla mediante \texttt{localStorage}, detección de ratón (\texttt{mousemove}/\texttt{mouseover}) y motor de recetas. \\
+\addlinespace
+\textbf{Edu} & \texttt{impacto.html}\newline \texttt{js/impacto.js} & Lógica de procesamiento numérico de la calculadora ecológica, cálculo dinámico de CO$_2$ y ahorro monetario en euros, y actualización dinámica de distintivos de nivel. \\
+\addlinespace
+\textbf{Pablo} & \texttt{donaciones.html}\newline \texttt{js/donaciones.js}\newline \texttt{mapa-valencia.html} & Formulario de donación solidaria con validación en cliente, filtrado interactivo de tablas por distritos de València y desarrollo del mapa interactivo incrustado en \texttt{<iframe>}. \\
+\addlinespace
+\textbf{Común} & \texttt{css/estilos.css} & Diseño visual conjunto de la hoja de estilos compartida (paleta azul corporativa, modelo de caja y Flexbox). \\
+\bottomrule
+\end{tabularx}
+\caption{Matriz de responsabilidades y reparto de ficheros del proyecto.}
+\label{tab:reparto}
+\end{table}
+
+\subsection{Contribución Individual al Trabajo Global}
+\begin{itemize}
+    \item \textbf{Alejandro (25\%):} Maquetación semántica del portal de bienvenida, definición de la estructura modular de la nevera doméstica y desarrollo de las operaciones de modificación de la estructura de la página (reordenación ascendente de productos perecederos).
+    \item \textbf{Lora (25\%):} Implementación de la API de Drag and Drop según los ejemplos de clase (\texttt{dataTransfer}, eventos \texttt{dragstart}, \texttt{dragover} y \texttt{drop}), integración del almacenamiento local (\texttt{localStorage}) e interacción visual al pasar el cursor sobre los ingredientes.
+    \item \textbf{Edu (25\%):} Modelado matemático del impacto del desperdicio alimentario, integración de controles de formulario tipo \texttt{range} y actualización en tiempo real del DOM con retroalimentación visual del nivel de sostenibilidad.
+    \item \textbf{Pablo (25\%):} Recopilación geográfica de los centros receptores de donaciones en València, filtrado en tiempo real de filas en tablas HTML y orquestación del marco en línea (\texttt{<iframe>}) que muestra tanto los cuatro puntos simultáneos como el enfoque individual.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% 2. INTRODUCCIÓN Y ADECUACIÓN A LOS ODS
+% ==============================================================================
+\section{Introducción y Adecuación a los Objetivos de Desarrollo Sostenible}
+
+El proyecto \textbf{Tu Nevera Sostenible} nace como respuesta universitaria al grave problema del desperdicio de comida en el ámbito doméstico y estudiantil de la ciudad de València. Según datos de la Organización de las Naciones Unidas para la Alimentación y la Agricultura (FAO), aproximadamente un tercio de todos los alimentos producidos a nivel mundial para consumo humano se pierde o desperdicia cada año, lo que representa un uso ineficiente de recursos hídricos, energéticos y de suelo fértil.
+
+El sistema web desarrollado se enmarca de forma directa en dos de los \textbf{Objetivos de Desarrollo Sostenible (ODS)} de la Agenda 2030:
+
+\subsection{ODS 12: Producción y Consumo Responsables}
+La Meta 12.3 establece el compromiso internacional de:
+\begin{quote}
+\textit{<<De aquí a 2030, reducir a la mitad el desperdicio de alimentos per cápita mundial en la venta al por menor y a nivel de los consumidores y reducir las pérdidas de alimentos a lo largo de las cadenas de producción y suministro>>.}
+\end{quote}
+La plataforma aborda este reto facilitando un control exhaustivo del inventario de la nevera, proporcionando avisos tempranos de caducidad y promoviendo la tradicional \textbf{cocina de aprovechamiento valenciana} (reutilización de sobras en arroces melosos, salteados, sopas y postres) mediante una interfaz interactiva de arrastrar y soltar.
+
+\subsection{ODS 2: Hambre Cero}
+La Meta 2.1 busca poner fin al hambre y asegurar el acceso de todas las personas, en particular las personas en situaciones de vulnerabilidad, a una alimentación sana, nutritiva y suficiente durante todo el año.
+
+A través del módulo de \textbf{Red Solidaria}, la aplicación permite que aquellos alimentos que no vayan a ser consumidos a tiempo en los hogares se deriven ágilmente a comedores sociales y despensas comunitarias consolidadas en los distintos distritos de València (como Casa Caridad en Pechina, el Comedor San José en El Cabanyal o la Despensa Solidaria de Benimaclet), evitando su destrucción y favoreciendo la justicia social.
+
+\newpage
+
+% ==============================================================================
+% 3. ARQUITECTURA DEL SISTEMA Y TECNOLOGÍAS
+% ==============================================================================
+\section{Arquitectura del Sistema y Tecnologías Empleadas}
+
+Siguiendo de manera estricta los contenidos impartidos en las sesiones de teoría y prácticas de laboratorio de la asignatura, el sistema se ha construido íntegramente sobre tecnologías estándar del lado cliente (\textit{front-end}) sin recurrir a ningún framework externo ni librerías comerciales pesadas (sin React, Angular, Vue ni Tailwind CSS), garantizando un código transparente, didáctico y robusto.
+
+\subsection{HTML5 Semántico}
+Se ha priorizado el uso de elementos semánticos estándar para dotar al documento de significado estructurado y accesibilidad:
+\begin{itemize}
+    \item \texttt{<header>} y \texttt{<footer>}: Encabezado y pie corporativo unificado en las cuatro páginas.
+    \item \texttt{<nav>}: Barra de navegación principal estructurada mediante listas \texttt{<ul>} y elementos \texttt{<li>}.
+    \item \texttt{<main>}, \texttt{<section>} y \texttt{<article>}: Jerarquización lógica de los bloques de contenido y módulos del menú principal.
+    \item \texttt{<form>}, \texttt{<fieldset>} y \texttt{<legend>}: Agrupación coherente de campos de entrada de datos con etiquetas accesibles.
+    \item \texttt{<table>}, \texttt{<thead>}, \texttt{<tbody>}, \texttt{<tr>}, \texttt{<th>} y \texttt{<td>}: Presentación tabular ordenada de inventarios y directorios de centros.
+    \item \texttt{<iframe>}: Marco en línea para la integración del mapa interactivo de València.
+    \item \texttt{<img>}: Inserción multimedia de imágenes institucionales oficiales.
+\end{itemize}
+
+\subsection{CSS3 Modular y Diseño Coherente}
+Todos los estilos visuales se centralizan en un único fichero externo (\texttt{css/estilos.css}), lo que garantiza una apariencia coherente en todo el portal:
+\begin{itemize}
+    \item \textbf{Modelo de caja:} Aplicación universal de \texttt{box-sizing: border-box} para un control exacto de márgenes, rellenos y bordes, conforme a los ejemplos de clase.
+    \item \textbf{Tipografía formal:} Configuración de una tipografía serif clásica (\textit{Times New Roman}) heredada en todos los elementos del DOM.
+    \item \textbf{Paleta de colores azul institucional:} Uso de tonos marino (\texttt{\#1e3a5f}), azul oscuro (\texttt{\#12283e}) y cian corporativo (\texttt{\#0284c7}) sobre fondos suaves (\texttt{\#f0f4f8}), evitando estéticas artificiales.
+    \item \textbf{Flexbox nativo:} Uso de \texttt{display: flex}, \texttt{justify-content} y \texttt{flex-wrap} para la alineación del menú de navegación, paneles de tarjetas y distribución del área de juego.
+\end{itemize}
+
+\subsection{JavaScript Nativo (Vanilla JS)}
+La interactividad se implementa mediante manipulación directa del DOM (\textit{Document Object Model}) utilizando APIs nativas:
+\begin{itemize}
+    \item \textbf{Manejo de eventos:} Registro mediante \texttt{addEventListener} para capturar eventos de carga (\texttt{DOMContentLoaded}), ratón (\texttt{click}, \texttt{mouseover}, \texttt{mousemove}, \texttt{mouseout}), formularios (\texttt{submit}, \texttt{change}, \texttt{input}) y arrastre (\texttt{dragstart}, \texttt{dragover}, \texttt{dragleave}, \texttt{drop}).
+    \item \textbf{API de Drag and Drop:} Transferencia de identificadores con \texttt{event.dataTransfer.setData()} y lectura mediante \texttt{event.dataTransfer.getData()}.
+    \item \textbf{Almacenamiento Web (\texttt{localStorage}):} Persistencia del estado de los alimentos entre recargas del navegador mediante serialización JSON.
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% 4. EXPLICACIÓN DETALLADA DE LAS PÁGINAS DEL SISTEMA
+% ==============================================================================
+\section{Explicación Detallada de las Páginas del Sistema}
+
+\subsection{Página 1: Inicio y Mi Nevera (\texttt{index.html} / \texttt{js/nevera.js})}
+Esta página constituye la portada y el centro de control del inventario doméstico. Presenta:
+\begin{enumerate}
+    \item \textbf{Bloque de Bienvenida y ODS:} Introducción conceptual que explica la motivación del proyecto y las insignias de los ODS 2 y 12.
+    \item \textbf{Menú de Navegación de Módulos:} Tarjetas explicativas con enlaces directos a las distintas áreas de la web.
+    \item \textbf{Formulario de Alta de Alimentos:} Permite al usuario introducir nombre, categoría (frutas, verduras, lácteos, cereales o legumbres), fecha de caducidad y cantidad. Al pulsar el botón, JavaScript crea un nuevo nodo \texttt{<tr>} con \texttt{document.createElement} y lo inserta en la tabla mediante \texttt{appendChild}.
+    \item \textbf{Tabla Dinámica de Inventario:} Lista los alimentos registrados calculando automáticamente su urgencia en función de los días restantes para la fecha límite. Cada fila incluye un botón de eliminación que invoca \texttt{removeChild}.
+    \item \textbf{Interacciones JavaScript Obligatorias:}
+    \begin{itemize}
+        \item \textit{Aparición/desaparición:} Botón para mostrar u ocultar la caja de consejos de conservación mediante \texttt{style.display}.
+        \item \textit{Cambio de estilo:} Botón para activar el <<Modo Alerta de Caducidad>>, que altera dinámicamente el color de fondo, borde izquierdo y grosor de texto de los alimentos perecederos.
+        \item \textit{Cambio de estructura del DOM:} Botón para reordenar la tabla, localizando los elementos urgentes y reposicionándolos al principio mediante \texttt{insertBefore}.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Página 2: La Olla Virtual de Aprovechamiento (\texttt{recetas.html} / \texttt{js/recetas.js})}
+Espacio interactivo orientado a evitar el desperdicio de sobras de comida mediante la API nativa de Drag and Drop:
+\begin{enumerate}
+    \item \textbf{Panel Despensa (Origen de Arrastre):} Contiene siete ingredientes típicos valencianos marcados con \texttt{draggable="true"}. Al arrastrar un elemento, se activa el evento \texttt{dragstart} que almacena su identificador en el objeto \texttt{dataTransfer}.
+    \item \textbf{Panel de Detección de Movimiento de Ratón:} Al desplazar el cursor sobre cualquiera de los ingredientes de la despensa (\texttt{mouseover}), se despliega una caja explicativa con información nutricional y de conservación. Asimismo, el evento \texttt{mousemove} calcula y actualiza en tiempo real las coordenadas locales del ratón (\texttt{offsetX}, \texttt{offsetY}).
+    \item \textbf{Zona de Soltar (La Olla):} Implementa \texttt{dragover} (con \texttt{event.preventDefault()} para autorizar el depósito) y \texttt{drop}. Al soltar un ingrediente, se transfiere físicamente al interior de la cazuela.
+    \item \textbf{Persistencia con \texttt{localStorage}:} La relación de ingredientes depositados en la olla se guarda automáticamente en el almacenamiento local. Al recargar la página, se leen los datos persistidos y se reconstruye el contenido de la olla.
+    \item \textbf{Motor de Recomendación Culinaria:} Al pulsar <<Cocinar Receta>>, el script analiza los ingredientes introducidos y sugiere recetas valencianas de aprovechamiento (arroz meloso de verduras, ropa vieja con restos de cocido o torrijas caseras de pan sobrante).
+    \item \textbf{Botón de Reinicio:} Vierte los ingredientes de nuevo en la despensa y limpia la persistencia de \texttt{localStorage}.
+\end{enumerate}
+
+\subsection{Página 3: Calculadora de Impacto y Ahorro (\texttt{impacto.html} / \texttt{js/impacto.js})}
+Herramienta analítica de procesamiento de datos orientada a concienciar sobre el valor del consumo responsable:
+\begin{enumerate}
+    \item \textbf{Formulario Paramétrico:} Incorpora un control de deslizamiento (\texttt{<input type="range">}) para los kilogramos de comida salvada por semana, número de comensales y selector de tipología de dieta.
+    \item \textbf{Procesamiento Dinámico:} Calcula en cliente tres indicadores anuales:
+    \begin{align*}
+        \text{Comida Salvada (kg/año)} &= \text{kg/semana} \times 52 \\
+        \text{Emisiones de CO}_2\text{ Evitadas (kg)} &= \text{kg/año} \times \text{Factor Dieta} \\
+        \text{Ahorro Económico (€)} &= \text{kg/año} \times 3.80\text{ €/kg}
+    \end{align*}
+    \item \textbf{Distintivo Ecológico Dinámico:} Modifica el color y mensaje del distintivo de reconocimiento (Nivel 1: Iniciado, Nivel 2: Guardián de la Huerta, Nivel 3: Campeón de la Sostenibilidad) en función del impacto total obtenido.
+\end{enumerate}
+
+\subsection{Página 4: Red Solidaria y Donación (\texttt{donaciones.html} / \texttt{mapa-valencia.html} / \texttt{js/donaciones.js})}
+Página orientada a la canalización de excedentes alimentarios hacia entidades benéficas de València:
+\begin{enumerate}
+    \item \textbf{Marco en Línea (\texttt{<iframe>}) con Mapa Interactivo:} Muestra las ubicaciones geográficas de las entidades colaboradoras sobre cartografía OpenStreetMap. Por defecto, el mapa ajusta su encuadre (\texttt{fitBounds}) para mostrar los cuatro puntos simultáneamente. A través de botones superiores o desde la tabla, el mapa permite enfocar individualmente cada centro y desplegar su ficha de contacto.
+    \item \textbf{Directorio Filtrable por Distritos:} Tabla estructurada de entidades benéficas que permite filtrar en vivo las filas visibles mediante un selector de zonas (Ciutat Vella, Benimaclet, Marítim y Campanar), modificando la propiedad \texttt{style.display} de los elementos \texttt{<tr>}.
+    \item \textbf{Formulario de Registro de Donaciones:} Captura datos del donante, tipo de producto, cantidad y centro receptor, validando que los campos requeridos estén completos y que se acepte la cláusula higiénico-sanitaria. Al enviarlo, genera una notificación de confirmación dinámica.
+\end{enumerate}
+
+\newpage
+
+% ==============================================================================
+% 5. CUMPLIMIENTO DE REQUISITOS TÉCNICOS
+% ==============================================================================
+\section{Cumplimiento de Requisitos Técnicos de la Asignatura}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X c}
+\toprule
+\textbf{Requisito del Enunciado} & \textbf{Implementación Concreta en el Proyecto} & \textbf{Cumplimiento} \\
+\midrule
+Al menos 4 páginas HTML & \texttt{index.html}, \texttt{recetas.html}, \texttt{impacto.html}, \texttt{donaciones.html} & \textbf{100\%} \\
+Elementos HTML diversos & Formularios, tablas, barra de navegación, iframes, enlaces, imágenes & \textbf{100\%} \\
+Estilos CSS coherentes & Hoja externa compartida, modelo de caja, Flexbox, paleta azul corporativa & \textbf{100\%} \\
+Aparición y desaparición & Cajas de consejos, panel de recetas y alertas de éxito con \texttt{style.display} & \textbf{100\%} \\
+Cambio de estilos dinámico & Modo alerta de caducidad, insignias de impacto y áreas de drop activo & \textbf{100\%} \\
+Cambio de estructura del DOM & Reordenación de tabla con \texttt{insertBefore} y eliminación con \texttt{removeChild} & \textbf{100\%} \\
+Gestión de Drag and Drop & Arrastre nativo de ingredientes a la olla (\texttt{dragstart}, \texttt{dragover}, \texttt{drop}) & \textbf{100\%} \\
+Detección de ratón & Captura interactiva de \texttt{mouseover}, \texttt{mousemove} y \texttt{mouseout} con coordenadas & \textbf{100\%} \\
+Persistencia web & Almacenamiento y restauración del estado de la olla con \texttt{localStorage} & \textbf{100\%} \\
+Organización en carpetas & Código encapsulado en carpetas \texttt{css/}, \texttt{js/}, \texttt{img/} con responsable único & \textbf{100\%} \\
+\bottomrule
+\end{tabularx}
+\caption{Matriz de trazabilidad y verificación de requisitos técnicos docentes.}
+\label{tab:requisitos}
+\end{table}
+
+% ==============================================================================
+% 6. GUIÓN Y ESTRUCTURA DEL VÍDEO DIDÁCTICO
+% ==============================================================================
+\section{Estructura y Guión del Vídeo Didáctico (2 a 3 Minutos)}
+
+Conforme a las directrices de evaluación, el vídeo didáctico se estructura para una duración de aproximadamente 2 minutos y medio, garantizando la intervención equilibrada de los cuatro integrantes del equipo:
+
+\begin{itemize}
+    \item \textbf{Bloque 1 (0:00 -- 0:35) | Miembro 1:}
+    Presentación del equipo, vinculación del proyecto con los ODS 2 y 12 en València. Demostración de \texttt{index.html}: alta de un nuevo alimento en la nevera, activación del modo alerta de caducidad y reordenación de productos urgentes al inicio de la tabla.
+    
+    \item \textbf{Bloque 2 (0:35 -- 1:15) | Miembro 2:}
+    Navegación a \texttt{recetas.html}. Demostración de la detección de movimiento de ratón sobre los ingredientes, ejecución del Drag and Drop introduciendo alimentos en la olla, verificación de la persistencia tras recargar la página (\texttt{F5}) y generación de la receta de aprovechamiento.
+    
+    \item \textbf{Bloque 3 (1:15 -- 1:50) | Miembro 3:}
+    Navegación a \texttt{impacto.html}. Manipulación del slider semanal de alimentos salvados, cálculo en directo del ahorro en euros y emisiones de CO$_2$ evitadas, y visualización del cambio de categoría en el distintivo ecológico.
+    
+    \item \textbf{Bloque 4 (1:50 -- 2:30) | Miembro 4:}
+    Navegación a \texttt{donaciones.html}. Explicación del mapa con los cuatro puntos simultáneos y enfoque individual, filtrado de comedores benéficos por distrito y formalización de una donación con confirmación dinámica.
+\end{itemize}
+
+% ==============================================================================
+% 7. CONCLUSIONES
+% ==============================================================================
+\section{Conclusiones}
+
+El desarrollo del mini-proyecto web \textbf{Tu Nevera Sostenible} ha permitido poner en práctica de manera integral los conocimientos adquiridos en la asignatura \textit{Programación Web y Sistemas Inmersivos}. Se ha demostrado la viabilidad de construir un sistema web funcional, usable y estéticamente cuidado sin recurrir a tecnologías desproporcionadas, manteniendo el código dentro del marco pedagógico universitario. 
+
+La solución técnica desarrollada no solo cumple rigurosamente con los requisitos cuantitativos y cualitativos de la guía docente, sino que además aporta un valor social y ambiental palpable, alineado con las metas de sostenibilidad global de la Universitat Politècnica de València.
+
+\end{document}
